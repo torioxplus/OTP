@@ -15,17 +15,17 @@ const registerSchema = z.object({
 
 const loginSchema = z.object({
   email: z.string().email('Valid email address required'),
-  password: z.string().optional(),
+  password: z.string().min(1, 'Password is required'),
 });
 
 const adminLoginSchema = z.object({
   key: z.string().min(1, 'Admin master key required'),
 });
 
-authRouter.post('/register', validate(registerSchema), (req, res, next) => {
+authRouter.post('/register', validate(registerSchema), async (req, res, next) => {
   try {
     const { name, email, password, phone } = req.body;
-    const result = authService.register(name, email, password, phone);
+    const result = await authService.register(name, email, password, phone);
     res.status(201).json({
       success: true,
       message: 'Account created successfully',
@@ -36,10 +36,10 @@ authRouter.post('/register', validate(registerSchema), (req, res, next) => {
   }
 });
 
-authRouter.post('/login', validate(loginSchema), (req, res, next) => {
+authRouter.post('/login', validate(loginSchema), async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const result = authService.login(email, password);
+    const result = await authService.login(email, password);
     res.json({
       success: true,
       message: 'Login successful',
@@ -50,17 +50,11 @@ authRouter.post('/login', validate(loginSchema), (req, res, next) => {
   }
 });
 
-authRouter.post('/demo-customer', (_req, res, next) => {
-  try {
-    const result = authService.loginAsDemoCustomer();
-    res.json({
-      success: true,
-      message: 'Logged in as Demo Customer',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
+authRouter.post('/demo-customer', (_req, res) => {
+  res.status(403).json({
+    success: false,
+    error: 'Demo customer login has been permanently disabled. Please create a real account.',
+  });
 });
 
 authRouter.post('/admin-login', validate(adminLoginSchema), (req, res, next) => {

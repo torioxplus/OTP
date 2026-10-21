@@ -14,12 +14,10 @@ import {
   LayoutDashboard,
   Settings,
   HelpCircle,
-  Shield,
   LogOut,
   User as UserIcon,
   Clock,
   History,
-  KeyRound,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -67,16 +65,6 @@ export const Navbar: React.FC = () => {
             {!isLoggedIn ? (
               /* When NOT Logged In: Show Login & Sign Up buttons */
               <div className="flex items-center gap-2 sm:gap-3">
-                {/* Discreet Superadmin Key entry button */}
-                <button
-                  type="button"
-                  onClick={() => openAuthModal('admin')}
-                  className="p-2 rounded-xl text-zinc-400 hover:text-purple-400 hover:bg-zinc-900 border border-transparent hover:border-purple-800/40 transition cursor-pointer"
-                  title="Admin Superadmin Key Access"
-                >
-                  <KeyRound className="w-4 h-4" />
-                </button>
-
                 <button
                   type="button"
                   onClick={() => openAuthModal('login')}
@@ -210,17 +198,6 @@ export const Navbar: React.FC = () => {
                           <WalletIcon className="w-4 h-4 text-emerald-400" />
                           <span>Wallet & Ledger</span>
                         </Link>
-
-                        {/* Admin Console - ONLY visible if currentUser is admin/superadmin! */}
-                        {isAdmin && (
-                          <Link
-                            href="/admin"
-                            className="flex items-center gap-2 px-3 py-1.5 text-xs text-purple-300 hover:text-white hover:bg-purple-950/60 rounded-lg transition"
-                          >
-                            <Shield className="w-4 h-4 text-purple-400" />
-                            <span>Admin Console</span>
-                          </Link>
-                        )}
 
                         <Link
                           href="/dashboard/settings"

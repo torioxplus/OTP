@@ -223,23 +223,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
         ))}
-
-        {/* If Admin, show Quick Portal Switch in Sidebar */}
-        {isAdmin && (
-          <div className="pt-2 border-t border-zinc-800/80">
-            <span className="px-3 text-[10px] font-bold text-purple-400 uppercase tracking-wider block mb-1">
-              ADMINISTRATION
-            </span>
-            <Link
-              href="/admin"
-              onClick={() => setIsMobileSidebarOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-purple-300 hover:bg-purple-950/60 border border-purple-800/40 transition"
-            >
-              <Shield className="w-4 h-4 text-purple-400" />
-              <span>Admin Console</span>
-            </Link>
-          </div>
-        )}
       </div>
 
       {/* 4. Sidebar Bottom User Section with Interactive Settings & Logout Dropdown */}

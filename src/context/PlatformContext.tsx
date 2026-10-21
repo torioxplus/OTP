@@ -38,6 +38,8 @@ interface PlatformContextType {
   currentUser: User;
   isLoggedIn: boolean;
   isAdminAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, password: string, phone?: string) => Promise<{ success: boolean; error?: string }>;
   switchRole: (role: UserRole) => void;
   loginAsDummyCustomer: (details?: { name?: string; email?: string }) => void;
   loginWithAdminKey: (key: string) => { success: boolean; error?: string };
@@ -45,8 +47,8 @@ interface PlatformContextType {
 
   // Auth modal management
   isAuthModalOpen: boolean;
-  authModalTab: 'login' | 'signup' | 'admin';
-  openAuthModal: (tab?: 'login' | 'signup' | 'admin') => void;
+  authModalTab: 'login' | 'signup';
+  openAuthModal: (tab?: 'login' | 'signup') => void;
   closeAuthModal: () => void;
 
   allUsers: User[];
@@ -121,7 +123,7 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<User>(INITIAL_USER);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState<'login' | 'signup' | 'admin'>('login');
+  const [authModalTab, setAuthModalTab] = useState<'login' | 'signup'>('login');
   const [allUsers, setAllUsers] = useState<User[]>(INITIAL_ALL_USERS);
   const [wallet, setWallet] = useState<Wallet>(INITIAL_WALLET);
   const [transactions, setTransactions] = useState<WalletTransaction[]>(INITIAL_TRANSACTIONS);
@@ -334,7 +336,7 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [activeOrder]);
 
   // Auth modal management
-  const openAuthModal = (tab: 'login' | 'signup' | 'admin' = 'login') => {
+  const openAuthModal = (tab: 'login' | 'signup' = 'login') => {
     setAuthModalTab(tab);
     setIsAuthModalOpen(true);
   };
@@ -343,37 +345,83 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsAuthModalOpen(false);
   };
 
-  // Login as Dummy Customer
-  const loginAsDummyCustomer = (details?: { name?: string; email?: string }) => {
-    const dummy: User = {
-      ...INITIAL_USER,
-      name: details?.name?.trim() || INITIAL_USER.name,
-      email: details?.email?.trim() || INITIAL_USER.email,
-      role: 'customer',
-    };
-    setCurrentUser(dummy);
-    setIsLoggedIn(true);
-    localStorage.setItem('otp_is_logged_in', 'true');
-    localStorage.setItem('otp_user_role', 'customer');
-    localStorage.setItem('otp_user_data', JSON.stringify(dummy));
-    playChime();
-
-    // Sync with backend auth in background
-    api.auth.loginAsDemoCustomer().then(async (res) => {
+  // Real Database Login
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const res = await api.auth.login(email, password);
       if (res.success && res.data?.user) {
         setCurrentUser(res.data.user);
-        const [walRes, txnRes, actRes, ordRes] = await Promise.all([
-          api.wallet.getBalance(),
-          api.wallet.getTransactions(),
-          api.otp.getActiveOrder(),
-          api.otp.getUserOrders(),
-        ]);
-        if (walRes.success && walRes.data?.wallet) setWallet(walRes.data.wallet);
-        if (txnRes.success && txnRes.data?.transactions) setTransactions(txnRes.data.transactions);
-        if (actRes.success) setActiveOrder(actRes.data?.activeOrder || null);
-        if (ordRes.success && ordRes.data?.orders) setOrders(ordRes.data.orders);
+        setIsLoggedIn(true);
+        localStorage.setItem('otp_is_logged_in', 'true');
+        localStorage.setItem('otp_user_role', res.data.user.role || 'customer');
+        localStorage.setItem('otp_user_data', JSON.stringify(res.data.user));
+        playChime();
+
+        // Refresh live user data
+        try {
+          const [walRes, txnRes, actRes, ordRes] = await Promise.all([
+            api.wallet.getBalance(),
+            api.wallet.getTransactions(),
+            api.otp.getActiveOrder(),
+            api.otp.getUserOrders(),
+          ]);
+          if (walRes.success && walRes.data?.wallet) setWallet(walRes.data.wallet);
+          if (txnRes.success && txnRes.data?.transactions) setTransactions(txnRes.data.transactions);
+          if (actRes.success) setActiveOrder(actRes.data?.activeOrder || null);
+          if (ordRes.success && ordRes.data?.orders) setOrders(ordRes.data.orders);
+        } catch (e) {
+          console.warn('Post-login sync warning:', e);
+        }
+
+        return { success: true };
       }
-    }).catch(() => {});
+      return { success: false, error: res.error || 'Invalid credentials' };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Login failed';
+      return { success: false, error: msg };
+    }
+  };
+
+  // Real Database Registration
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    phone?: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const res = await api.auth.register(name, email, password, phone);
+      if (res.success && res.data?.user) {
+        setCurrentUser(res.data.user);
+        setIsLoggedIn(true);
+        localStorage.setItem('otp_is_logged_in', 'true');
+        localStorage.setItem('otp_user_role', 'customer');
+        localStorage.setItem('otp_user_data', JSON.stringify(res.data.user));
+        setWallet({
+          id: `wal_${res.data.user.id}`,
+          userId: res.data.user.id,
+          availableBalance: 0.0,
+          heldBalance: 0.0,
+          currency: 'INR',
+          updatedAt: new Date().toISOString(),
+        });
+        setTransactions([]);
+        playChime();
+        return { success: true };
+      }
+      return { success: false, error: res.error || 'Registration failed' };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Registration failed';
+      return { success: false, error: msg };
+    }
+  };
+
+  // Deprecated dummy fallback for backward compatibility
+  const loginAsDummyCustomer = (_details?: { name?: string; email?: string }) => {
+    console.warn('Demo login is permanently disabled. Please use real login/register.');
   };
 
   // Login with Superadmin Key
@@ -977,6 +1025,8 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         currentUser,
         isLoggedIn,
         isAdminAuthenticated: isLoggedIn && (currentUser.role === 'admin' || currentUser.role === 'superadmin'),
+        login,
+        register,
         switchRole,
         loginAsDummyCustomer,
         loginWithAdminKey,

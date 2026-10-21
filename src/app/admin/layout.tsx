@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { usePlatform, SUPERADMIN_MASTER_KEY } from '@/context/PlatformContext';
+import { usePlatform } from '@/context/PlatformContext';
 import {
   Shield,
   LayoutDashboard,
@@ -71,24 +71,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               This area is strictly restricted to platform administrators. Enter your Master
               Superadmin Key to unlock administrative privileges.
             </p>
-          </div>
-
-          {/* Master Key Demo Autofill Box */}
-          <div className="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-800/60 flex items-center justify-between text-xs">
-            <div>
-              <span className="text-[10px] text-zinc-400 block">Master Superadmin Key:</span>
-              <code className="text-purple-300 font-mono font-bold">{SUPERADMIN_MASTER_KEY}</code>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setInputKey(SUPERADMIN_MASTER_KEY);
-                setKeyError(null);
-              }}
-              className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs transition cursor-pointer"
-            >
-              Auto-fill Key
-            </button>
           </div>
 
           {keyError && (
