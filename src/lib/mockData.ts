@@ -244,8 +244,8 @@ export const INITIAL_SERVICES: ServiceItem[] = [
 
 export const INITIAL_PROVIDERS: SmsProvider[] = [
   {
-    id: 'prv_5sim',
-    name: '5SIM Adapter',
+    id: 'prv-5sim',
+    name: '5SIM',
     code: 'five_sim',
     enabled: true,
     priority: 1,
@@ -259,8 +259,8 @@ export const INITIAL_PROVIDERS: SmsProvider[] = [
     totalNumbersAssigned: 0,
   },
   {
-    id: 'prv_onlinesim',
-    name: 'OnlineSIM Adapter',
+    id: 'prv-onlinesim',
+    name: 'OnlineSIM',
     code: 'online_sim',
     enabled: true,
     priority: 2,
@@ -268,14 +268,14 @@ export const INITIAL_PROVIDERS: SmsProvider[] = [
     currency: 'RUB',
     minBalanceAlert: 400.0,
     apiHealth: 'operational',
-    pingMs: 68,
+    pingMs: 65,
     successRate: 100.0,
     lastCheckedAt: 'Just now',
     totalNumbersAssigned: 0,
   },
   {
-    id: 'prv_smsman',
-    name: 'SMS-Man Adapter',
+    id: 'prv-smsman',
+    name: 'SMS-Man',
     code: 'sms_man',
     enabled: false,
     priority: 3,

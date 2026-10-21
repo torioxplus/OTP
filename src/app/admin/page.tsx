@@ -36,7 +36,13 @@ export default function AdminDashboardPage() {
 
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
-  const [liveUsers, setLiveUsers] = useState<User[]>([]);
+  const [isRefreshingDashboard, setIsRefreshingDashboard] = useState(false);
+
+  // Instant hydration from fast cache
+  const cachedStats = api.cache.get<{ stats: Record<string, number> }>('/admin/dashboard')?.data?.stats;
+  const cachedUsers = api.cache.get<{ users: User[] }>('/admin/users')?.data?.users;
+
+  const [liveUsers, setLiveUsers] = useState<User[]>(cachedUsers || []);
   const [liveStats, setLiveStats] = useState<{
     totalUsers: number;
     activeUsers: number;
@@ -49,23 +55,24 @@ export default function AdminDashboardPage() {
     totalProviderCost: number;
     grossProfit: number;
   }>({
-    totalUsers: 0,
-    activeUsers: 0,
-    todayRecharge: 0,
-    todayOrders: 0,
-    successfulOrders: 0,
-    failedOrders: 0,
-    totalRefunds: 0,
-    totalRevenue: 0,
-    totalProviderCost: 0,
-    grossProfit: 0,
+    totalUsers: cachedStats?.totalUsers || 0,
+    activeUsers: cachedStats?.activeUsers || 0,
+    todayRecharge: cachedStats?.todayRecharge || 0,
+    todayOrders: cachedStats?.todayOrders || 0,
+    successfulOrders: cachedStats?.successfulOrders || 0,
+    failedOrders: cachedStats?.failedOrders || 0,
+    totalRefunds: cachedStats?.totalRefunds || 0,
+    totalRevenue: cachedStats?.totalRevenue || 0,
+    totalProviderCost: cachedStats?.totalProviderCost || 0,
+    grossProfit: cachedStats?.grossProfit || 0,
   });
 
-  const fetchLiveAdminData = async () => {
+  const fetchLiveAdminData = async (force: boolean = false) => {
+    if (force) setIsRefreshingDashboard(true);
     try {
       const [dashRes, usersRes] = await Promise.all([
-        api.admin.getDashboard(),
-        api.admin.getUsers(),
+        api.admin.getDashboard({ force }),
+        api.admin.getUsers({ force }),
       ]);
       if (dashRes.success && dashRes.data?.stats) {
         setLiveStats(dashRes.data.stats as any);
@@ -75,11 +82,26 @@ export default function AdminDashboardPage() {
       }
     } catch (e) {
       console.warn('Failed to fetch live admin data:', e);
+    } finally {
+      setIsRefreshingDashboard(false);
     }
   };
 
   React.useEffect(() => {
-    fetchLiveAdminData();
+    fetchLiveAdminData(false);
+
+    // Subscribe to cache updates
+    const unsubDash = api.cache.subscribe<{ stats: Record<string, number> }>('/admin/dashboard', (c) => {
+      if (c?.stats) setLiveStats(c.stats as any);
+    });
+    const unsubUsers = api.cache.subscribe<{ users: User[] }>('/admin/users', (c) => {
+      if (c?.users) setLiveUsers(c.users);
+    });
+
+    return () => {
+      unsubDash();
+      unsubUsers();
+    };
   }, []);
 
   const totalRevenue = liveStats.totalRevenue;
@@ -121,6 +143,16 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => fetchLiveAdminData(true)}
+            disabled={isRefreshingDashboard}
+            className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer border border-zinc-700"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingDashboard ? 'animate-spin' : ''}`} />
+            <span>{isRefreshingDashboard ? 'Refreshing...' : 'Refresh KPIs'}</span>
+          </button>
+
           <button
             type="button"
             onClick={handleSyncAll}

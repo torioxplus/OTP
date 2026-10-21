@@ -165,12 +165,13 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     queueMicrotask(() => {
       try {
         const dataVer = readCache('otp_data_version');
-        if (dataVer !== 'v2_clean') {
-          // Invalidate legacy mock caches (orders, transactions, mock balances)
-          ['otp_orders', 'otp_txns', 'otp_wallet', 'otp_all_users', 'otp_tickets', 'otp_providers'].forEach((k) => {
+        if (dataVer !== 'v5_app_cache') {
+          // Invalidate legacy mock caches (orders, transactions, mock balances, old providers)
+          ['otp_orders', 'otp_txns', 'otp_wallet', 'otp_all_users', 'otp_tickets', 'otp_providers', 'otp_services'].forEach((k) => {
             try { localStorage.removeItem(k); } catch {}
           });
-          writeCache('otp_data_version', 'v2_clean');
+          api.cache.clearAll();
+          writeCache('otp_data_version', 'v5_app_cache');
         } else {
           const savedWallet = readCache('otp_wallet');
           if (savedWallet) setWallet(JSON.parse(savedWallet));
@@ -187,13 +188,13 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             );
             if (pending) setActiveOrder(pending);
           }
+
+          const savedServices = readCache('otp_services');
+          if (savedServices) setServices(JSON.parse(savedServices));
+
+          const savedProviders = readCache('otp_providers');
+          if (savedProviders) setProviders(JSON.parse(savedProviders));
         }
-
-        const savedServices = readCache('otp_services');
-        if (savedServices) setServices(JSON.parse(savedServices));
-
-        const savedProviders = readCache('otp_providers');
-        if (savedProviders) setProviders(JSON.parse(savedProviders));
 
         const savedLoggedIn = readCache('otp_is_logged_in');
         if (savedLoggedIn === 'true') {
@@ -967,7 +968,7 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const syncAllProviders = async () => {
     try {
-      const res = await api.services.getProviders();
+      const res = await api.services.getProviders({ force: true });
       if (res.success && res.data?.providers) {
         setProviders(res.data.providers);
         playChime();

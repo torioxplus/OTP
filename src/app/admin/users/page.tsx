@@ -26,8 +26,14 @@ interface ExtendedUser extends User {
 
 export default function AdminUsersPage() {
   const { allUsers: contextUsers } = usePlatform();
-  const [usersList, setUsersList] = useState<ExtendedUser[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Fast initial hydration from client cache
+  const cachedUsers = api.cache.get<{ users: User[] }>('/admin/users')?.data?.users;
+  const [usersList, setUsersList] = useState<ExtendedUser[]>(
+    (cachedUsers || (contextUsers && contextUsers.length > 0 ? contextUsers : [])) as ExtendedUser[]
+  );
+  const [isLoading, setIsLoading] = useState(!cachedUsers && (!contextUsers || contextUsers.length === 0));
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [adjustingUser, setAdjustingUser] = useState<ExtendedUser | null>(null);
 
@@ -37,26 +43,36 @@ export default function AdminUsersPage() {
   const [reason, setReason] = useState<string>('Courtesy credit adjustment');
   const [isAdjusting, setIsAdjusting] = useState(false);
 
-  const fetchLiveUsers = async () => {
-    setIsLoading(true);
+  const fetchLiveUsers = async (force: boolean = false) => {
+    if (force) setIsRefreshing(true);
     try {
-      const res = await api.admin.getUsers();
+      const res = await api.admin.getUsers({ force });
       if (res.success && res.data?.users) {
         setUsersList(res.data.users as ExtendedUser[]);
-      } else if (contextUsers && contextUsers.length > 0) {
+      } else if (contextUsers && contextUsers.length > 0 && usersList.length === 0) {
         setUsersList(contextUsers as ExtendedUser[]);
       }
     } catch {
-      if (contextUsers && contextUsers.length > 0) {
+      if (contextUsers && contextUsers.length > 0 && usersList.length === 0) {
         setUsersList(contextUsers as ExtendedUser[]);
       }
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
-    fetchLiveUsers();
+    fetchLiveUsers(false);
+    // Subscribe to cache updates
+    const unsubscribe = api.cache.subscribe<{ users: User[] }>('/admin/users', (cached) => {
+      if (cached?.users) {
+        setUsersList(cached.users as ExtendedUser[]);
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const handleToggleStatus = async (userId: string) => {
@@ -118,12 +134,12 @@ export default function AdminUsersPage() {
 
         <button
           type="button"
-          onClick={fetchLiveUsers}
-          disabled={isLoading}
+          onClick={() => fetchLiveUsers(true)}
+          disabled={isRefreshing}
           className="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-xs font-semibold flex items-center gap-2 transition cursor-pointer shadow-lg shadow-purple-600/20"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-          <span>{isLoading ? 'Fetching Supabase...' : 'Refresh Customers'}</span>
+          <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <span>{isRefreshing ? 'Fetching Supabase...' : 'Refresh Customers'}</span>
         </button>
       </div>
 

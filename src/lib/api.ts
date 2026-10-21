@@ -8,6 +8,7 @@ import {
   OtpOrder,
   SupportTicket,
 } from '@/types';
+import { clientCache, DEFAULT_TTLS } from './cache';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
@@ -39,14 +40,21 @@ export const removeStoredToken = (): void => {
   }
 };
 
-interface ApiResponse<T = unknown> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   message?: string;
   data?: T;
   error?: string;
 }
 
-async function request<T>(
+export interface RequestOptions extends RequestInit {
+  ttl?: number;
+  force?: boolean;
+  bypassCache?: boolean;
+  swr?: boolean;
+}
+
+async function rawFetch<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
@@ -87,15 +95,69 @@ async function request<T>(
   }
 }
 
+async function request<T>(
+  endpoint: string,
+  options: RequestOptions = {}
+): Promise<ApiResponse<T>> {
+  const method = (options.method || 'GET').toUpperCase();
+  const isGet = method === 'GET';
+
+  // 1. GET requests use client cache & SWR
+  if (isGet && !options.bypassCache) {
+    const ttl = options.ttl ?? DEFAULT_TTLS.SERVICES;
+    return clientCache.fetchWithCache<ApiResponse<T>>(
+      endpoint,
+      () => rawFetch<T>(endpoint, options),
+      { ttl, force: options.force, swr: options.swr !== false }
+    );
+  }
+
+  // 2. Non-GET or cache-bypassed requests execute directly
+  const res = await rawFetch<T>(endpoint, options);
+
+  // 3. Smart automatic invalidation on successful mutations
+  if (res.success && !isGet) {
+    if (endpoint.startsWith('/wallet')) {
+      clientCache.invalidatePrefix('/wallet');
+      clientCache.invalidatePrefix('/admin/dashboard');
+      clientCache.invalidatePrefix('/admin/users');
+    } else if (endpoint.startsWith('/otp')) {
+      clientCache.invalidatePrefix('/otp');
+      clientCache.invalidatePrefix('/wallet');
+      clientCache.invalidatePrefix('/admin/dashboard');
+    } else if (endpoint.startsWith('/services')) {
+      clientCache.invalidatePrefix('/services');
+      clientCache.invalidatePrefix('/admin/dashboard');
+    } else if (endpoint.startsWith('/admin')) {
+      clientCache.invalidatePrefix('/admin');
+      clientCache.invalidatePrefix('/services');
+      clientCache.invalidatePrefix('/wallet');
+    } else if (endpoint.startsWith('/tickets')) {
+      clientCache.invalidatePrefix('/tickets');
+    } else if (endpoint.startsWith('/auth')) {
+      clientCache.clearAll();
+    }
+  }
+
+  return res;
+}
+
 export const api = {
+  // Cache utility exposure
+  cache: clientCache,
+
   // 1. Health
-  healthCheck: async () => {
-    return request<{ status: string; service: string }>('/health');
+  healthCheck: async (options?: { force?: boolean }) => {
+    return request<{ status: string; service: string }>('/health', {
+      ttl: DEFAULT_TTLS.STATIC,
+      force: options?.force,
+    });
   },
 
   // 2. Authentication
   auth: {
     login: async (email: string, password?: string) => {
+      clientCache.clearAll();
       const res = await request<{ user: User; token: string }>('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -107,6 +169,7 @@ export const api = {
     },
 
     register: async (name: string, email: string, password: string, phone?: string) => {
+      clientCache.clearAll();
       const res = await request<{ user: User; token: string }>('/auth/register', {
         method: 'POST',
         body: JSON.stringify({ name, email, password, phone }),
@@ -118,6 +181,7 @@ export const api = {
     },
 
     loginAsDemoCustomer: async () => {
+      clientCache.clearAll();
       const res = await request<{ user: User; token: string }>('/auth/demo-customer', {
         method: 'POST',
       });
@@ -128,6 +192,7 @@ export const api = {
     },
 
     loginWithAdminKey: async (key: string) => {
+      clientCache.clearAll();
       const res = await request<{ user: User; token: string }>('/auth/admin-login', {
         method: 'POST',
         body: JSON.stringify({ key }),
@@ -138,23 +203,36 @@ export const api = {
       return res;
     },
 
-    getMe: async () => {
-      return request<{ user: User }>('/auth/me');
+    getMe: async (options?: { force?: boolean }) => {
+      return request<{ user: User }>('/auth/me', {
+        ttl: 30 * 1000,
+        force: options?.force,
+      });
     },
 
     logout: () => {
       removeStoredToken();
+      clientCache.clearAll();
     },
   },
 
   // 3. Wallet
   wallet: {
-    getBalance: async () => {
-      return request<{ wallet: Wallet }>('/wallet/balance');
+    getBalance: async (options?: { force?: boolean }) => {
+      return request<{ wallet: Wallet }>('/wallet/balance', {
+        ttl: DEFAULT_TTLS.WALLET,
+        force: options?.force,
+      });
     },
 
-    getTransactions: async (limit: number = 50) => {
-      return request<{ transactions: WalletTransaction[] }>(`/wallet/transactions?limit=${limit}`);
+    getTransactions: async (limit: number = 50, options?: { force?: boolean }) => {
+      return request<{ transactions: WalletTransaction[] }>(
+        `/wallet/transactions?limit=${limit}`,
+        {
+          ttl: DEFAULT_TTLS.WALLET,
+          force: options?.force,
+        }
+      );
     },
 
     createRecharge: async (amount: number, paymentMethod: string) => {
@@ -208,7 +286,6 @@ export const api = {
       });
     },
 
-
     adminAdjust: async (
       userId: string,
       type: 'ADMIN_CREDIT' | 'ADMIN_DEBIT',
@@ -224,20 +301,29 @@ export const api = {
 
   // 4. Services & Providers
   services: {
-    getAll: async (category?: string, countryCode?: string) => {
+    getAll: async (category?: string, countryCode?: string, options?: { force?: boolean }) => {
       const params = new URLSearchParams();
       if (category) params.set('category', category);
       if (countryCode) params.set('countryCode', countryCode);
       const query = params.toString() ? `?${params.toString()}` : '';
-      return request<{ services: ServiceItem[] }>(`/services${query}`);
+      return request<{ services: ServiceItem[] }>(`/services${query}`, {
+        ttl: DEFAULT_TTLS.SERVICES,
+        force: options?.force,
+      });
     },
 
-    getCountries: async () => {
-      return request<{ countries: Country[] }>('/services/countries');
+    getCountries: async (options?: { force?: boolean }) => {
+      return request<{ countries: Country[] }>('/services/countries', {
+        ttl: DEFAULT_TTLS.STATIC,
+        force: options?.force,
+      });
     },
 
-    getProviders: async () => {
-      return request<{ providers: SmsProvider[] }>('/services/providers');
+    getProviders: async (options?: { force?: boolean }) => {
+      return request<{ providers: SmsProvider[] }>('/services/providers', {
+        ttl: DEFAULT_TTLS.PROVIDERS,
+        force: options?.force,
+      });
     },
 
     updateService: async (id: string, updates: Partial<ServiceItem>) => {
@@ -276,12 +362,18 @@ export const api = {
       });
     },
 
-    getUserOrders: async () => {
-      return request<{ orders: OtpOrder[] }>('/otp/orders');
+    getUserOrders: async (options?: { force?: boolean }) => {
+      return request<{ orders: OtpOrder[] }>('/otp/orders', {
+        ttl: DEFAULT_TTLS.ORDERS,
+        force: options?.force,
+      });
     },
 
-    getActiveOrder: async () => {
-      return request<{ activeOrder: OtpOrder | null }>('/otp/orders/active');
+    getActiveOrder: async (options?: { force?: boolean }) => {
+      return request<{ activeOrder: OtpOrder | null }>('/otp/orders/active', {
+        ttl: DEFAULT_TTLS.ACTIVE_ORDER,
+        force: options?.force,
+      });
     },
 
     getOrder: async (id: string) => {
@@ -304,8 +396,11 @@ export const api = {
 
   // 6. Support Tickets
   tickets: {
-    getAll: async () => {
-      return request<{ tickets: SupportTicket[] }>('/tickets');
+    getAll: async (options?: { force?: boolean }) => {
+      return request<{ tickets: SupportTicket[] }>('/tickets', {
+        ttl: DEFAULT_TTLS.TICKETS,
+        force: options?.force,
+      });
     },
 
     create: async (subject: string, category: string, message: string) => {
@@ -325,12 +420,18 @@ export const api = {
 
   // 7. Admin Dashboard
   admin: {
-    getDashboard: async () => {
-      return request<{ stats: Record<string, number> }>('/admin/dashboard');
+    getDashboard: async (options?: { force?: boolean }) => {
+      return request<{ stats: Record<string, number> }>('/admin/dashboard', {
+        ttl: DEFAULT_TTLS.ADMIN_STATS,
+        force: options?.force,
+      });
     },
 
-    getUsers: async () => {
-      return request<{ users: User[] }>('/admin/users');
+    getUsers: async (options?: { force?: boolean }) => {
+      return request<{ users: User[] }>('/admin/users', {
+        ttl: DEFAULT_TTLS.ADMIN_USERS,
+        force: options?.force,
+      });
     },
 
     toggleUser: async (userId: string) => {

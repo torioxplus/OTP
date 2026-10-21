@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { usePlatform } from '@/context/PlatformContext';
 import { SmsProvider } from '@/types';
+import { api } from '@/lib/api';
 import {
   Cpu,
   RefreshCw,
@@ -18,12 +19,21 @@ import {
 } from 'lucide-react';
 
 export default function AdminProvidersPage() {
-  const { providers, updateProvider, syncProviderBalance, syncAllProviders } = usePlatform();
+  const { providers: contextProviders, updateProvider, syncProviderBalance, syncAllProviders } = usePlatform();
   const [editingProvider, setEditingProvider] = useState<SmsProvider | null>(null);
   const [priority, setPriority] = useState<number>(1);
   const [minAlert, setMinAlert] = useState<number>(1000);
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
+
+  // Fallback to cache or context
+  const cachedProviders = api.cache.get<{ providers: SmsProvider[] }>('/services/providers')?.data?.providers;
+  const providers = (cachedProviders && cachedProviders.length > 0) ? cachedProviders : contextProviders;
+
+  React.useEffect(() => {
+    // Background fetch latest carrier status
+    api.services.getProviders({ force: false }).catch(() => {});
+  }, []);
 
   const handleOpenEdit = (p: SmsProvider) => {
     setEditingProvider(p);
