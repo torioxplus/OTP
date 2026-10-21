@@ -76,6 +76,43 @@ export class WalletService {
     };
 
     memoryStore.transactions.push(transaction);
+
+    // Persist wallet update and ledger transaction to Supabase PostgreSQL
+    import('../lib/supabase.js').then(async ({ getSupabase, isSupabaseConfigured }) => {
+      if (isSupabaseConfigured()) {
+        try {
+          const client = getSupabase();
+          await client.from('wallets').upsert({
+            id: wallet.id,
+            user_id: wallet.userId,
+            available_balance: wallet.availableBalance,
+            held_balance: wallet.heldBalance,
+            currency: wallet.currency,
+            updated_at: wallet.updatedAt,
+          });
+
+          await client.from('wallet_transactions').insert({
+            id: transaction.id,
+            wallet_id: transaction.walletId,
+            user_id: transaction.userId,
+            type: transaction.type,
+            amount: transaction.amount,
+            balance_before: transaction.balanceBefore,
+            balance_after: transaction.balanceAfter,
+            hold_before: transaction.holdBefore,
+            hold_after: transaction.holdAfter,
+            reference_type: transaction.referenceType,
+            reference_id: transaction.referenceId,
+            description: transaction.description,
+            status: transaction.status,
+            created_at: transaction.createdAt,
+          });
+        } catch (err: unknown) {
+          console.warn('Supabase wallet/transaction sync warning:', err);
+        }
+      }
+    }).catch(() => {});
+
     return { wallet, transaction };
   }
 

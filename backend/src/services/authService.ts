@@ -52,6 +52,36 @@ export class AuthService {
     };
     memoryStore.wallets.set(newUser.id, wallet);
 
+    // Persist new user and wallet to Supabase PostgreSQL in background
+    import('../lib/supabase.js').then(async ({ getSupabase, isSupabaseConfigured }) => {
+      if (isSupabaseConfigured()) {
+        try {
+          const client = getSupabase();
+          await client.from('users').insert({
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email,
+            phone: newUser.phone,
+            role: newUser.role,
+            status: newUser.status,
+            email_verified: newUser.emailVerified,
+            two_factor_enabled: newUser.twoFactorEnabled,
+            created_at: newUser.createdAt,
+          });
+
+          await client.from('wallets').insert({
+            id: wallet.id,
+            user_id: wallet.userId,
+            available_balance: wallet.availableBalance,
+            held_balance: wallet.heldBalance,
+            currency: wallet.currency,
+          });
+        } catch (err: unknown) {
+          console.warn('Supabase user/wallet sync warning:', err);
+        }
+      }
+    }).catch(() => {});
+
     const token = this.generateToken(newUser);
     return { user: newUser, token };
   }

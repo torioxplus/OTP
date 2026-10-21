@@ -17,6 +17,9 @@ export const config = {
   rubToInrRate: parseFloat(process.env.RUB_TO_INR_RATE || '1.10'),
   razorpayKeyId: process.env.RAZORPAY_KEY_ID || '',
   razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET || '',
+  supabaseUrl: process.env.SUPABASE_URL || 'https://yceaqcdehuftdldskugt.supabase.co',
+  supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
+  supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
 };
 
 

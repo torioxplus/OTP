@@ -15,6 +15,24 @@ const server = app.listen(PORT, () => {
   // Start background worker for 5-minute order timeout and hold release
   otpOrderService.startBackgroundWorker(3000);
 
+  // Verify Supabase Cloud PostgreSQL connection
+  import('./lib/supabase.js').then(async ({ getSupabase, isSupabaseConfigured }) => {
+    if (isSupabaseConfigured()) {
+      try {
+        const { count, error } = await getSupabase()
+          .from('services')
+          .select('*', { count: 'exact', head: true });
+        if (!error) {
+          console.log(`⚡ [Supabase DB] Connected to Cloud PostgreSQL (Tables: 9, Catalog items: ${count})`);
+        } else {
+          console.warn('[Supabase DB Error]', error.message);
+        }
+      } catch (err: unknown) {
+        console.warn('[Supabase DB Warning]', err);
+      }
+    }
+  });
+
   // Sync initial live balances for 5SIM & OnlineSIM
   import('./services/providerService.js').then(({ providerService }) => {
     providerService.syncProviderBalances().catch((err) => {

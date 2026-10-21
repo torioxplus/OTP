@@ -3,7 +3,39 @@ import { memoryStore } from '../store/memoryStore.js';
 
 export const serviceRouter = Router();
 
-serviceRouter.get('/', (_req: Request, res: Response) => {
+serviceRouter.get('/', async (_req: Request, res: Response) => {
+  try {
+    const { getSupabase, isSupabaseConfigured } = await import('../lib/supabase.js');
+    if (isSupabaseConfigured()) {
+      const { data, error } = await getSupabase()
+        .from('services')
+        .select('*')
+        .order('selling_price', { ascending: true });
+      if (!error && data && data.length > 0) {
+        const services = data.map((s: Record<string, any>) => ({
+          id: s.id,
+          name: s.name,
+          slug: s.slug,
+          serviceCode: s.service_code,
+          category: s.category,
+          countryCode: s.country_code,
+          sellingPrice: Number(s.selling_price),
+          minimumMargin: Number(s.minimum_margin),
+          maximumProviderCost: Number(s.maximum_provider_cost),
+          providerCostEstimate: Number(s.provider_cost_estimate),
+          enabled: s.enabled,
+          successRate: Number(s.success_rate),
+          avgSpeedSeconds: s.avg_speed_seconds,
+          iconName: s.icon_name,
+        }));
+        res.json({ success: true, data: { services } });
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn('Supabase services fetch error, falling back to memory store:', err);
+  }
+
   const services = Array.from(memoryStore.services.values());
   res.json({
     success: true,
@@ -11,7 +43,26 @@ serviceRouter.get('/', (_req: Request, res: Response) => {
   });
 });
 
-serviceRouter.get('/countries', (_req: Request, res: Response) => {
+serviceRouter.get('/countries', async (_req: Request, res: Response) => {
+  try {
+    const { getSupabase, isSupabaseConfigured } = await import('../lib/supabase.js');
+    if (isSupabaseConfigured()) {
+      const { data, error } = await getSupabase().from('countries').select('*');
+      if (!error && data && data.length > 0) {
+        const countries = data.map((c: Record<string, any>) => ({
+          code: c.code,
+          name: c.name,
+          dialCode: c.dial_code,
+          flag: c.flag,
+        }));
+        res.json({ success: true, data: { countries } });
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn('Supabase countries fetch error, falling back to memory store:', err);
+  }
+
   const countries = Array.from(memoryStore.countries.values());
   res.json({
     success: true,
