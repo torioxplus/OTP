@@ -14,26 +14,34 @@ export const adminRouter = Router();
 adminRouter.use(authenticate, requireAdmin);
 
 // 1. Dashboard Overview KPIs (Section 30)
-adminRouter.get('/dashboard', (_req: AuthenticatedRequest, res: Response) => {
-  const stats = adminService.getDashboardStats();
-  res.json({
-    success: true,
-    data: { stats },
-  });
+adminRouter.get('/dashboard', async (_req: AuthenticatedRequest, res: Response, next) => {
+  try {
+    const stats = await adminService.getDashboardStats();
+    res.json({
+      success: true,
+      data: { stats },
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // 2. User Directory (Section 13, 24)
-adminRouter.get('/users', (_req: AuthenticatedRequest, res: Response) => {
-  const users = adminService.getAllUsers();
-  res.json({
-    success: true,
-    data: { users },
-  });
+adminRouter.get('/users', async (_req: AuthenticatedRequest, res: Response, next) => {
+  try {
+    const users = await adminService.getAllUsers();
+    res.json({
+      success: true,
+      data: { users },
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
-adminRouter.patch('/users/:id/status', (req: AuthenticatedRequest, res: Response, next) => {
+adminRouter.patch('/users/:id/status', async (req: AuthenticatedRequest, res: Response, next) => {
   try {
-    const user = adminService.toggleUserStatus(req.params.id as string);
+    const user = await adminService.toggleUserStatus(req.params.id as string);
     res.json({
       success: true,
       message: `User status changed to ${user.status}`,

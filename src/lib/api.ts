@@ -325,8 +325,8 @@ export const api = {
 
   // 7. Admin Dashboard
   admin: {
-    getKPIs: async () => {
-      return request<{ kpis: unknown }>('/admin/kpis');
+    getDashboard: async () => {
+      return request<{ stats: Record<string, number> }>('/admin/dashboard');
     },
 
     getUsers: async () => {
@@ -334,9 +334,24 @@ export const api = {
     },
 
     toggleUser: async (userId: string) => {
-      return request<{ user: User }>(`/admin/users/${userId}/toggle`, {
+      return request<{ user: User }>(`/admin/users/${userId}/status`, {
         method: 'PATCH',
       });
+    },
+
+    adjustWallet: async (
+      userId: string,
+      type: 'ADMIN_CREDIT' | 'ADMIN_DEBIT',
+      amount: number,
+      notes: string
+    ) => {
+      return request<{ wallet: Wallet; transaction: WalletTransaction }>(
+        `/admin/users/${userId}/wallet/adjust`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ type, amount, notes }),
+        }
+      );
     },
 
     updateMargin: async (serviceId: string, minimumMargin: number) => {

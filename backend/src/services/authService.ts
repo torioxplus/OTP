@@ -117,6 +117,18 @@ export class AuthService {
         if (walletError) {
           console.warn('[AuthService] Supabase wallet creation warning:', walletError);
         }
+
+        // Also create user in Supabase GoTrue Auth so user appears in Supabase Authentication Dashboard!
+        try {
+          await client.auth.admin.createUser({
+            email: newUser.email,
+            password: password,
+            email_confirm: true,
+            user_metadata: { name: newUser.name, phone: newUser.phone, role: newUser.role },
+          });
+        } catch (authErr) {
+          console.warn('[AuthService] Supabase Auth dashboard creation note:', authErr);
+        }
       } catch (err: unknown) {
         if (err instanceof Error && err.message.includes('already exists')) {
           throw err;
@@ -201,6 +213,26 @@ export class AuthService {
       (password === config.superadminMasterKey || password === 'SUPERADMIN_2026')
     ) {
       isPasswordValid = true;
+    }
+
+    // Fallback: Verify against Supabase GoTrue Auth
+    if (!isPasswordValid && isSupabaseConfigured()) {
+      try {
+        const client = getSupabase();
+        const { data: authData, error: authErr } = await client.auth.signInWithPassword({
+          email: normalizedEmail,
+          password,
+        });
+
+        if (authData?.user && !authErr) {
+          isPasswordValid = true;
+          // Sync bcrypt password hash back to public.users for fast local lookup
+          const newHash = await bcrypt.hash(password, 10);
+          await client.from('users').update({ password_hash: newHash }).eq('id', user.id);
+        }
+      } catch (authErr) {
+        console.warn('[AuthService] Supabase GoTrue Auth login fallback note:', authErr);
+      }
     }
 
     if (!isPasswordValid) {

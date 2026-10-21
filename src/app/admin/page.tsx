@@ -22,11 +22,12 @@ import {
   Zap,
 } from 'lucide-react';
 
+import { api } from '@/lib/api';
+import { User, OtpOrder } from '@/types';
+
 export default function AdminDashboardPage() {
   const {
-    allUsers,
     orders,
-    transactions,
     providers,
     syncProviderBalance,
     syncAllProviders,
@@ -35,17 +36,60 @@ export default function AdminDashboardPage() {
 
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
+  const [liveUsers, setLiveUsers] = useState<User[]>([]);
+  const [liveStats, setLiveStats] = useState<{
+    totalUsers: number;
+    activeUsers: number;
+    todayRecharge: number;
+    todayOrders: number;
+    successfulOrders: number;
+    failedOrders: number;
+    totalRefunds: number;
+    totalRevenue: number;
+    totalProviderCost: number;
+    grossProfit: number;
+  }>({
+    totalUsers: 0,
+    activeUsers: 0,
+    todayRecharge: 0,
+    todayOrders: 0,
+    successfulOrders: 0,
+    failedOrders: 0,
+    totalRefunds: 0,
+    totalRevenue: 0,
+    totalProviderCost: 0,
+    grossProfit: 0,
+  });
 
-  const completedOrders = orders.filter((o) => o.status === 'COMPLETED');
-  const successRate = orders.length > 0 ? ((completedOrders.length / orders.length) * 100).toFixed(1) : '100';
+  const fetchLiveAdminData = async () => {
+    try {
+      const [dashRes, usersRes] = await Promise.all([
+        api.admin.getDashboard(),
+        api.admin.getUsers(),
+      ]);
+      if (dashRes.success && dashRes.data?.stats) {
+        setLiveStats(dashRes.data.stats as any);
+      }
+      if (usersRes.success && usersRes.data?.users) {
+        setLiveUsers(usersRes.data.users);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch live admin data:', e);
+    }
+  };
 
-  const totalRevenue = completedOrders.reduce((acc, curr) => acc + curr.sellingPrice, 0);
-  const totalProviderCost = completedOrders.reduce((acc, curr) => acc + curr.providerCost, 0);
-  const grossMargin = totalRevenue - totalProviderCost;
+  React.useEffect(() => {
+    fetchLiveAdminData();
+  }, []);
 
-  const totalRecharge = transactions
-    .filter((t) => t.type === 'CREDIT_RECHARGE')
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  const totalRevenue = liveStats.totalRevenue;
+  const grossMargin = liveStats.grossProfit;
+  const totalRecharge = liveStats.todayRecharge;
+  const allUsers = liveUsers;
+
+  const totalOrdersCount = liveStats.todayOrders || orders.length;
+  const completedOrdersCount = liveStats.successfulOrders || orders.filter((o) => o.status === 'COMPLETED').length;
+  const successRate = totalOrdersCount > 0 ? ((completedOrdersCount / totalOrdersCount) * 100).toFixed(1) : '100';
 
   const handleSyncProvider = async (id: string) => {
     setSyncingId(id);
@@ -198,7 +242,7 @@ export default function AdminDashboardPage() {
             {successRate}%
           </div>
           <p className="text-[11px] text-zinc-400 mt-1">
-            {completedOrders.length} of {orders.length} orders
+            {completedOrdersCount} of {totalOrdersCount} orders
           </p>
         </div>
       </div>
@@ -370,7 +414,7 @@ export default function AdminDashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/60">
-              {orders.slice(0, 5).map((order) => {
+              {orders.slice(0, 5).map((order: OtpOrder) => {
                 const isReal = order.isRealProvider;
                 return (
                   <tr key={order.id} className="hover:bg-zinc-900/40">

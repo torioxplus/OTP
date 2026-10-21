@@ -281,6 +281,40 @@ export class WalletService {
     };
 
     memoryStore.transactions.push(transaction);
+
+    // Persist adjustment to Supabase DB in background
+    import('../lib/supabase.js').then(async ({ getSupabase, isSupabaseConfigured }) => {
+      if (isSupabaseConfigured()) {
+        try {
+          const client = getSupabase();
+          await client.from('wallets').update({
+            available_balance: wallet.availableBalance,
+            held_balance: wallet.heldBalance,
+            updated_at: wallet.updatedAt,
+          }).eq('id', wallet.id);
+
+          await client.from('wallet_transactions').insert({
+            id: transaction.id,
+            wallet_id: transaction.walletId,
+            user_id: transaction.userId,
+            type: transaction.type,
+            amount: transaction.amount,
+            balance_before: transaction.balanceBefore,
+            balance_after: transaction.balanceAfter,
+            hold_before: transaction.holdBefore,
+            hold_after: transaction.holdAfter,
+            reference_type: transaction.referenceType,
+            reference_id: transaction.referenceId,
+            description: transaction.description,
+            status: transaction.status,
+            created_at: transaction.createdAt,
+          });
+        } catch (err) {
+          console.warn('[WalletService] Supabase adminAdjustBalance sync warning:', err);
+        }
+      }
+    }).catch(() => {});
+
     return { wallet, transaction };
   }
 }

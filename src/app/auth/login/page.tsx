@@ -40,7 +40,12 @@ export default function LoginPage() {
       setIsLoading(false);
 
       if (result.success) {
-        router.push('/dashboard/buy-number');
+        const role = localStorage.getItem('otp_user_role');
+        if (role === 'admin' || role === 'superadmin') {
+          router.push('/admin');
+        } else {
+          router.push('/dashboard/buy-number');
+        }
       } else {
         setErrorMessage(result.error || 'Invalid email or password.');
       }
