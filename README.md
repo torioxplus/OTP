@@ -53,7 +53,7 @@ Built using **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Tailwin
   - Recent ledger entries.
 - **`/dashboard/wallet/add-money`**:
   - Preset quick chips (₹100, ₹200, ₹500, ₹1000, ₹2000, ₹5000) and custom input.
-  - UPI / QR Code preview, Razorpay and Cashfree checkout simulation with instant ledger credit.
+  - UPI / QR Code preview, Razorpay instant checkout with automated ledger credit.
 - **`/dashboard/wallet/transactions`**:
   - Full double-entry financial ledger (Section 22 `wallet_transactions`): Transaction ID, Type, Amount, Balance Before → After, Hold Before → After, Reference ID, Description, Timestamp, and CSV Export.
 - **`/dashboard/support`**:

@@ -243,13 +243,12 @@ For India, integrate one supported payment gateway.
 Possible options:
 
 - Razorpay
-- Cashfree
 - PhonePe Payment Gateway
 - Stripe if business/payment model is supported
 
 Recommended initial integration:
 
-- **Razorpay** or **Cashfree**
+- **Razorpay (UPI / QR / Netbanking / Cards)**
 
 Payment flow:
 
@@ -1029,7 +1028,6 @@ POST /otp/orders/:id/refresh
 
 ```text
 POST /webhooks/payment/razorpay
-POST /webhooks/payment/cashfree
 ```
 
 ## Provider Webhooks
@@ -2072,7 +2070,7 @@ Cache / Queue:
 Redis + BullMQ
 
 Payment:
-Razorpay or Cashfree
+Razorpay (UPI, QR, Cards, Netbanking)
 
 SMS Provider:
 5SIM initially

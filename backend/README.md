@@ -11,7 +11,7 @@ Production-ready backend API built using **Node.js**, **Express.js**, **TypeScri
    - `HOLD_OTP_PURCHASE` locks funds when a number reservation is initiated.
    - `RELEASE_HOLD` instantly returns funds to available balance if cancelled before SMS receipt.
    - `DEBIT_OTP_PURCHASE` finalizes the deduction only upon successful OTP receipt.
-   - `CREDIT_RECHARGE` for instant top-ups via UPI / Razorpay / Cashfree gateway simulations.
+   - `CREDIT_RECHARGE` for instant top-ups via UPI / Razorpay gateway checkout.
 
 2. **SMS Provider Integration Layer (`providerService`)**:
    - Implements Section 11 Provider Selection: respects provider enabled status, priority order (1, 2, 3), and maximum allowed provider cost checks.
