@@ -29,7 +29,7 @@ export const RechargeModal: React.FC<RechargeModalProps> = ({
   const { rechargeWallet, refreshWallet } = usePlatform();
   const [amount, setAmount] = useState<number>(recommendedAmount || 200);
   const [customAmount, setCustomAmount] = useState<string>('');
-  const [method, setMethod] = useState<'upi' | 'razorpay' | 'cashfree'>('upi');
+  const [method, setMethod] = useState<'upi' | 'razorpay'>('upi');
   const [isProcessing, setIsProcessing] = useState(false);
   const [successTxn, setSuccessTxn] = useState<string | null>(null);
 
@@ -297,11 +297,11 @@ export const RechargeModal: React.FC<RechargeModalProps> = ({
                 <label className="block text-xs font-medium text-zinc-400 mb-2">
                   Choose Payment Gateway
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() => setMethod('upi')}
-                    className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition text-left cursor-pointer ${
+                    className={`p-3.5 rounded-xl border flex flex-col items-center gap-1.5 transition text-left cursor-pointer ${
                       method === 'upi'
                         ? 'bg-emerald-500/10 border-emerald-500 text-zinc-100 shadow-sm'
                         : 'bg-zinc-800/40 border-zinc-800 text-zinc-400 hover:border-zinc-700'
@@ -314,7 +314,7 @@ export const RechargeModal: React.FC<RechargeModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setMethod('razorpay')}
-                    className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition text-left cursor-pointer ${
+                    className={`p-3.5 rounded-xl border flex flex-col items-center gap-1.5 transition text-left cursor-pointer ${
                       method === 'razorpay'
                         ? 'bg-blue-500/10 border-blue-500 text-zinc-100 shadow-sm'
                         : 'bg-zinc-800/40 border-zinc-800 text-zinc-400 hover:border-zinc-700'
@@ -322,19 +322,6 @@ export const RechargeModal: React.FC<RechargeModalProps> = ({
                   >
                     <CreditCard className="w-5 h-5 text-blue-400" />
                     <span className="text-xs font-semibold">Razorpay</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setMethod('cashfree')}
-                    className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition text-left cursor-pointer ${
-                      method === 'cashfree'
-                        ? 'bg-purple-500/10 border-purple-500 text-zinc-100 shadow-sm'
-                        : 'bg-zinc-800/40 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                    }`}
-                  >
-                    <Sparkles className="w-5 h-5 text-purple-400" />
-                    <span className="text-xs font-semibold">Cashfree</span>
                   </button>
                 </div>
               </div>

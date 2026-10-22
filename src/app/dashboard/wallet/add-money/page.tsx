@@ -20,7 +20,7 @@ export default function AddMoneyPage() {
   const { rechargeWallet, refreshWallet, wallet, isLoaded } = usePlatform();
   const [amount, setAmount] = useState<number>(500);
   const [customAmount, setCustomAmount] = useState<string>('');
-  const [method, setMethod] = useState<'upi' | 'razorpay' | 'cashfree'>('upi');
+  const [method, setMethod] = useState<'upi' | 'razorpay'>('upi');
   const [isProcessing, setIsProcessing] = useState(false);
   const [successTxn, setSuccessTxn] = useState<string | null>(null);
 
@@ -190,7 +190,7 @@ export default function AddMoneyPage() {
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight">Add Money to Wallet</h1>
         <p className="text-xs text-zinc-400 mt-1">
-          Instant top-up via UPI, Razorpay or Cashfree. Zero gateway transaction fee.
+          Instant top-up via UPI or Razorpay. Zero gateway transaction fee.
         </p>
       </div>
 
@@ -276,13 +276,13 @@ export default function AddMoneyPage() {
                 2. Select Gateway / Method
               </label>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={() => setMethod('upi')}
-                  className={`p-3.5 rounded-xl border flex flex-col items-center gap-2 text-center transition cursor-pointer ${
+                  className={`p-4 rounded-xl border flex flex-col items-center gap-2 text-center transition cursor-pointer ${
                     method === 'upi'
-                      ? 'bg-emerald-500/15 border-emerald-500 text-white'
+                      ? 'bg-emerald-500/15 border-emerald-500 text-white shadow-sm shadow-emerald-500/10'
                       : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
                   }`}
                 >
@@ -293,27 +293,14 @@ export default function AddMoneyPage() {
                 <button
                   type="button"
                   onClick={() => setMethod('razorpay')}
-                  className={`p-3.5 rounded-xl border flex flex-col items-center gap-2 text-center transition cursor-pointer ${
+                  className={`p-4 rounded-xl border flex flex-col items-center gap-2 text-center transition cursor-pointer ${
                     method === 'razorpay'
-                      ? 'bg-blue-500/15 border-blue-500 text-white'
+                      ? 'bg-blue-500/15 border-blue-500 text-white shadow-sm shadow-blue-500/10'
                       : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
                   }`}
                 >
                   <CreditCard className="w-5 h-5 text-blue-400" />
                   <span className="text-xs font-bold">Razorpay</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setMethod('cashfree')}
-                  className={`p-3.5 rounded-xl border flex flex-col items-center gap-2 text-center transition cursor-pointer ${
-                    method === 'cashfree'
-                      ? 'bg-purple-500/15 border-purple-500 text-white'
-                      : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                  }`}
-                >
-                  <Sparkles className="w-5 h-5 text-purple-400" />
-                  <span className="text-xs font-bold">Cashfree</span>
                 </button>
               </div>
 
