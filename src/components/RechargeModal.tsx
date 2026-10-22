@@ -8,7 +8,6 @@ import {
   QrCode,
   ShieldCheck,
   CheckCircle2,
-  Sparkles,
   ArrowRight,
   Loader2,
   Zap,
