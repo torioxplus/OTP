@@ -74,6 +74,12 @@ ticketRouter.post('/:id/reply', validate(replyTicketSchema), (req: Authenticated
   const { message } = req.body;
   const isAdmin = req.user!.role === 'admin' || req.user!.role === 'superadmin';
 
+  // IDOR Protection: verify user owns the ticket or is an admin
+  if (ticket.userId !== req.user!.id && !isAdmin) {
+    res.status(403).json({ success: false, error: 'Access denied: You do not own this support ticket' });
+    return;
+  }
+
   ticket.replies.push({
     id: `REP-${uuidv4().slice(0, 8)}`,
     sender: isAdmin ? 'admin' : 'user',

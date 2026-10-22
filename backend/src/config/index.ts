@@ -2,6 +2,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Production security assertion
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    console.error('FATAL: JWT_SECRET must be set and at least 32 characters in production.');
+  }
+  if (!process.env.SUPERADMIN_MASTER_KEY) {
+    console.error('FATAL: SUPERADMIN_MASTER_KEY must be configured in production.');
+  }
+}
+
 export const config = {
   port: parseInt(process.env.PORT || '5000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',

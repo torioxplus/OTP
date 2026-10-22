@@ -24,45 +24,15 @@ export const authenticate = async (
     return;
   }
 
-  // Support Superadmin master key header
-  if (
-    authHeader === `Bearer ${config.superadminMasterKey}` ||
-    authHeader === 'Bearer SUPERADMIN_2026'
-  ) {
-    let adminUser = memoryStore.users.get('USR-ADMIN-001');
-    if (!adminUser && isSupabaseConfigured()) {
-      try {
-        const client = getSupabase();
-        const { data: dbAdmin } = await client
-          .from('users')
-          .select('*')
-          .eq('id', 'USR-ADMIN-001')
-          .maybeSingle();
-        if (dbAdmin) {
-          adminUser = {
-            id: dbAdmin.id,
-            name: dbAdmin.name,
-            email: dbAdmin.email,
-            phone: dbAdmin.phone || '',
-            role: 'admin',
-            status: 'active',
-            emailVerified: true,
-            twoFactorEnabled: true,
-            createdAt: dbAdmin.created_at,
-          };
-          memoryStore.users.set(adminUser.id, adminUser);
-        }
-      } catch {}
-    }
-
-    if (adminUser) {
-      req.user = adminUser;
-      next();
-      return;
-    }
-  }
-
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : authHeader;
+
+  if (!token) {
+    res.status(401).json({
+      success: false,
+      error: 'Authentication token is empty or malformed',
+    });
+    return;
+  }
 
   try {
     const decoded = jwt.verify(token, config.jwtSecret) as AuthTokenPayload;

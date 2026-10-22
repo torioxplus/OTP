@@ -28,8 +28,6 @@ import {
 import { api, getStoredToken, setStoredToken, removeStoredToken } from '@/lib/api';
 
 
-export const SUPERADMIN_MASTER_KEY = 'SUPERADMIN_2026';
-
 interface PlatformContextType {
   // Loading & Hydration Cache State
   isLoaded: boolean;
@@ -42,7 +40,7 @@ interface PlatformContextType {
   register: (name: string, email: string, password: string, phone?: string) => Promise<{ success: boolean; error?: string }>;
   switchRole: (role: UserRole) => void;
   loginAsDummyCustomer: (details?: { name?: string; email?: string }) => void;
-  loginWithAdminKey: (key: string) => { success: boolean; error?: string };
+  loginWithAdminKey: (key: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
 
   // Auth modal management
@@ -425,34 +423,44 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     console.warn('Demo login is permanently disabled. Please use real login/register.');
   };
 
-  // Login with Superadmin Key
-  const loginWithAdminKey = (key: string): { success: boolean; error?: string } => {
-    const cleanKey = key.trim().toUpperCase();
-    if (cleanKey === SUPERADMIN_MASTER_KEY || key.trim() === 'admin123' || cleanKey === 'SUPERADMIN') {
-      setCurrentUser(INITIAL_ADMIN_USER);
-      setIsLoggedIn(true);
-      localStorage.setItem('otp_is_logged_in', 'true');
-      localStorage.setItem('otp_user_role', 'admin');
-      playChime();
+  // Login with Superadmin Key via secure backend authentication
+  const loginWithAdminKey = async (key: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const cleanKey = key.trim();
+      if (!cleanKey) {
+        return { success: false, error: 'Administrator key is required.' };
+      }
 
-      // Async backend sync for admin session
-      api.auth.loginWithAdminKey(cleanKey).then(async (res) => {
-        if (res.success && res.data?.user) {
-          const [walRes, usersRes] = await Promise.all([
-            api.wallet.getBalance(),
-            api.admin.getUsers(),
-          ]);
-          if (walRes.success && walRes.data?.wallet) setWallet(walRes.data.wallet);
-          if (usersRes.success && usersRes.data?.users) setAllUsers(usersRes.data.users);
-        }
-      }).catch(() => {});
+      const res = await api.auth.loginWithAdminKey(cleanKey);
+      if (res.success && res.data?.user) {
+        const adminUser = res.data.user;
+        setCurrentUser(adminUser);
+        setIsLoggedIn(true);
+        localStorage.setItem('otp_is_logged_in', 'true');
+        localStorage.setItem('otp_user_role', adminUser.role);
+        localStorage.setItem('otp_user_data', JSON.stringify(adminUser));
 
-      return { success: true };
+        const [walRes, usersRes] = await Promise.all([
+          api.wallet.getBalance({ force: true }),
+          api.admin.getUsers({ force: true }),
+        ]);
+        if (walRes.success && walRes.data?.wallet) setWallet(walRes.data.wallet);
+        if (usersRes.success && usersRes.data?.users) setAllUsers(usersRes.data.users);
+
+        playChime();
+        return { success: true };
+      }
+
+      return {
+        success: false,
+        error: res.error || 'Invalid administrator key.',
+      };
+    } catch {
+      return {
+        success: false,
+        error: 'Authentication failed. Please verify credentials or network.',
+      };
     }
-    return {
-      success: false,
-      error: `Invalid Superadmin Key. Please enter the master key: ${SUPERADMIN_MASTER_KEY}`,
-    };
   };
 
   // Logout

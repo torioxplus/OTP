@@ -48,47 +48,31 @@ walletRouter.get('/transactions', (req: AuthenticatedRequest, res: Response) => 
   });
 });
 
-walletRouter.post('/recharge', validate(rechargeSchema), (req: AuthenticatedRequest, res: Response, next) => {
-  try {
-    const userId = req.user!.id;
-    const { amount, gateway, paymentMethod } = req.body;
-    const selectedMethod = paymentMethod || gateway || 'upi';
-    const refId = `PG-${selectedMethod.toUpperCase()}-${Date.now()}`;
-    const result = walletService.creditRecharge(userId, amount, refId, selectedMethod);
+// Server-side registry of pending Razorpay orders to prevent client-side amount tampering
+interface PendingPaymentOrder {
+  userId: string;
+  amount: number;
+  createdAt: number;
+}
+const pendingOrders = new Map<string, PendingPaymentOrder>();
 
-    res.status(201).json({
-      success: true,
-      message: `Wallet credited with ₹${amount.toFixed(2)} via ${selectedMethod.toUpperCase()}`,
-      data: {
-        ...result,
-        gatewayOrderId: refId,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
+// Unverified / Direct Recharge endpoints are permanently disabled for security
+walletRouter.post('/recharge', (_req: AuthenticatedRequest, res: Response) => {
+  res.status(403).json({
+    success: false,
+    error: 'Direct unverified recharge is permanently disabled. Please use official Razorpay checkout.',
+  });
 });
 
-walletRouter.post('/verify-payment', validate(verifyPaymentSchema), (req: AuthenticatedRequest, res: Response, next) => {
-  try {
-    const userId = req.user!.id;
-    const { paymentId, amount, gatewayOrderId } = req.body;
-    const rechargeAmount = amount || 100;
-    const refId = gatewayOrderId || `VERIFIED-${paymentId}`;
-    const result = walletService.creditRecharge(userId, rechargeAmount, refId, 'verified_gateway');
-
-    res.json({
-      success: true,
-      message: 'Payment verified and wallet balance updated successfully',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
+walletRouter.post('/verify-payment', (_req: AuthenticatedRequest, res: Response) => {
+  res.status(403).json({
+    success: false,
+    error: 'Unverified gateway verification is disabled. Please use official Razorpay verification.',
+  });
 });
 
 const razorpayCreateOrderSchema = z.object({
-  amount: z.number().positive('Recharge amount must be greater than zero'),
+  amount: z.number().min(10, 'Minimum recharge is ₹10').max(50000, 'Maximum recharge is ₹50,000'),
 });
 
 const razorpayVerifySchema = z.object({
@@ -116,6 +100,13 @@ walletRouter.post(
         return;
       }
 
+      // Record expected amount in server-side registry to prevent tampering
+      pendingOrders.set(orderResult.orderId, {
+        userId,
+        amount,
+        createdAt: Date.now(),
+      });
+
       res.json({
         success: true,
         message: 'Razorpay order created successfully',
@@ -136,26 +127,51 @@ walletRouter.post(
       const userId = req.user!.id;
       const { orderId, paymentId, signature, amount } = req.body;
 
+      // 1. Verify cryptographic HMAC SHA256 signature
       const verifyResult = razorpayService.verifySignature(orderId, paymentId, signature);
 
       if (!verifyResult.verified) {
         res.status(400).json({
           success: false,
-          error: verifyResult.error || 'Signature verification failed',
+          error: verifyResult.error || 'Payment signature verification failed',
         });
         return;
       }
 
+      // 2. Validate against server-registered pending order to prevent client-side amount tampering
+      const pending = pendingOrders.get(orderId);
+      if (pending && pending.userId !== userId) {
+        res.status(403).json({
+          success: false,
+          error: 'This payment order belongs to a different account',
+        });
+        return;
+      }
+
+      if (pending && Math.abs(amount - pending.amount) > 0.01) {
+        res.status(400).json({
+          success: false,
+          error: `Payment amount tampering detected. Expected: ₹${pending.amount}, Received: ₹${amount}`,
+        });
+        return;
+      }
+
+      const creditAmount = pending ? pending.amount : amount;
+
+      // 3. Credit wallet with idempotency check (rejects replay attacks)
       const rechargeResult = walletService.creditRecharge(
         userId,
-        amount,
+        creditAmount,
         paymentId,
         'RAZORPAY'
       );
 
+      // Clean up fulfilled pending order
+      pendingOrders.delete(orderId);
+
       res.json({
         success: true,
-        message: `Payment verified! ₹${amount.toFixed(2)} credited to your wallet.`,
+        message: `Payment verified! ₹${creditAmount.toFixed(2)} credited to your wallet.`,
         data: rechargeResult,
       });
     } catch (error) {

@@ -43,18 +43,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // If NOT authenticated as admin, show the Superadmin Key Gate
   if (!isAdminAuthenticated) {
-    const handleKeySubmit = (e: React.FormEvent) => {
+    const handleKeySubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setKeyError(null);
       setIsVerifying(true);
 
-      setTimeout(() => {
-        const result = loginWithAdminKey(inputKey);
-        setIsVerifying(false);
+      try {
+        const result = await loginWithAdminKey(inputKey);
         if (!result.success) {
-          setKeyError(result.error || 'Invalid Superadmin Key');
+          setKeyError(result.error || 'Invalid administrator key');
         }
-      }, 300);
+      } catch {
+        setKeyError('Authentication failed. Please verify credentials.');
+      } finally {
+        setIsVerifying(false);
+      }
     };
 
     return (

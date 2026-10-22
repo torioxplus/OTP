@@ -50,6 +50,14 @@ export class WalletService {
       throw new Error('Recharge amount must be greater than zero');
     }
 
+    // Idempotency check: prevent replay attacks with duplicate payment ID
+    const alreadyCredited = memoryStore.transactions.some(
+      (t) => t.referenceId === referenceId && t.status === 'COMPLETED'
+    );
+    if (alreadyCredited) {
+      throw new Error(`Payment transaction ${referenceId} has already been processed.`);
+    }
+
     const wallet = this.getOrCreateWallet(userId);
     const balanceBefore = wallet.availableBalance;
     const holdBefore = wallet.heldBalance;

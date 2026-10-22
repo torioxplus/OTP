@@ -5,7 +5,31 @@ import { config } from './config/index.js';
 import { apiRouter } from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+
 export const app = express();
+
+// Security HTTP headers
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Allow frontend Next.js embedding
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
+// Global Rate Limiter to prevent DoS / automated flooding
+const globalLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 300, // 300 requests per minute
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many requests from this IP. Please slow down and try again after a minute.',
+  },
+});
+app.use(globalLimiter);
 
 // Middlewares
 app.use(
@@ -14,7 +38,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(morgan('dev'));
 
 // Root endpoint

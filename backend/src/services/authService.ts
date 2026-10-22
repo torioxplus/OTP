@@ -210,7 +210,8 @@ export class AuthService {
       isPasswordValid = await bcrypt.compare(password, passwordHash);
     } else if (
       user.role === 'admin' &&
-      (password === config.superadminMasterKey || password === 'SUPERADMIN_2026')
+      config.superadminMasterKey &&
+      password === config.superadminMasterKey
     ) {
       isPasswordValid = true;
     }
@@ -293,7 +294,7 @@ export class AuthService {
   }
 
   public loginWithAdminKey(key: string): { user: User; token: string } {
-    if (key.trim() !== config.superadminMasterKey && key.trim() !== 'SUPERADMIN_2026') {
+    if (!config.superadminMasterKey || key.trim() !== config.superadminMasterKey) {
       throw new Error('Invalid Superadmin master key');
     }
     let adminUser = memoryStore.users.get('USR-ADMIN-001');

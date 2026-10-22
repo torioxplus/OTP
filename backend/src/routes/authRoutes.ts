@@ -4,7 +4,21 @@ import { authService } from '../services/authService.js';
 import { validate } from '../middleware/validate.js';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 
+import rateLimit from 'express-rate-limit';
+
 export const authRouter = Router();
+
+// Anti-Brute-Force Rate Limiter (Max 10 auth attempts per minute)
+const authLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many authentication attempts. Please wait 1 minute before trying again.',
+  },
+});
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -22,7 +36,7 @@ const adminLoginSchema = z.object({
   key: z.string().min(1, 'Admin master key required'),
 });
 
-authRouter.post('/register', validate(registerSchema), async (req, res, next) => {
+authRouter.post('/register', authLimiter, validate(registerSchema), async (req, res, next) => {
   try {
     const { name, email, password, phone } = req.body;
     const result = await authService.register(name, email, password, phone);
@@ -36,7 +50,7 @@ authRouter.post('/register', validate(registerSchema), async (req, res, next) =>
   }
 });
 
-authRouter.post('/login', validate(loginSchema), async (req, res, next) => {
+authRouter.post('/login', authLimiter, validate(loginSchema), async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const result = await authService.login(email, password);
@@ -57,7 +71,7 @@ authRouter.post('/demo-customer', (_req, res) => {
   });
 });
 
-authRouter.post('/admin-login', validate(adminLoginSchema), (req, res, next) => {
+authRouter.post('/admin-login', authLimiter, validate(adminLoginSchema), (req, res, next) => {
   try {
     const { key } = req.body;
     const result = authService.loginWithAdminKey(key);

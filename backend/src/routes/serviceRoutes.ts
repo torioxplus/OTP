@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { memoryStore } from '../store/memoryStore.js';
+import { authenticate, requireAdmin } from '../middleware/auth.js';
 
 export const serviceRouter = Router();
 
@@ -78,7 +79,7 @@ serviceRouter.get('/providers', (_req: Request, res: Response) => {
   });
 });
 
-serviceRouter.post('/providers/:id/sync', async (req: Request, res: Response) => {
+serviceRouter.post('/providers/:id/sync', authenticate, requireAdmin, async (req: Request, res: Response) => {
   const providerId = req.params.id as string;
   const provider = memoryStore.providers.get(providerId);
   if (!provider) {

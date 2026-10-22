@@ -92,11 +92,26 @@ otpRouter.post('/orders/:id/cancel', async (req: AuthenticatedRequest, res: Resp
 });
 
 
-// 6. Simulate Incoming SMS Delivery (Testing Hook)
+// 6. Simulate Incoming SMS Delivery (Testing Hook with strict ownership verification)
 otpRouter.post('/orders/:id/simulate-sms', validate(simulateSmsSchema), (req: AuthenticatedRequest, res: Response, next) => {
   try {
+    const orderId = req.params.id as string;
+    const existingOrder = otpOrderService.getOrder(orderId);
+
+    // IDOR Protection: verify that the user owns the order
+    if (existingOrder.userId !== req.user!.id && req.user!.role !== 'admin' && req.user!.role !== 'superadmin') {
+      res.status(403).json({ success: false, error: 'Access denied: You do not own this order' });
+      return;
+    }
+
+    // Live Carrier Protection: simulation is only allowed in sandbox/testing
+    if (existingOrder.isRealProvider && req.user!.role !== 'admin' && req.user!.role !== 'superadmin') {
+      res.status(400).json({ success: false, error: 'SMS simulation is disabled for live carrier numbers' });
+      return;
+    }
+
     const { code } = req.body;
-    const order = otpOrderService.receiveSms(req.params.id as string, code);
+    const order = otpOrderService.receiveSms(orderId, code);
     res.json({
       success: true,
       message: 'Simulated SMS code delivered and held funds finalized to debit.',

@@ -140,11 +140,18 @@ export class RazorpayService {
           .update(`${orderId}|${paymentId}`)
           .digest('hex');
 
-        const isValid = expectedSignature === signature;
+        let isValid = false;
+        try {
+          const expectedBuf = Buffer.from(expectedSignature, 'utf8');
+          const receivedBuf = Buffer.from(signature, 'utf8');
+          isValid = expectedBuf.length === receivedBuf.length && crypto.timingSafeEqual(expectedBuf, receivedBuf);
+        } catch {
+          isValid = false;
+        }
 
         if (!isValid) {
           console.warn(
-            `[Razorpay Signature Mismatch] Expected: ${expectedSignature}, Received: ${signature}`
+            `[Razorpay Signature Mismatch] Signature verification failed for order ${orderId}`
           );
           return {
             success: false,

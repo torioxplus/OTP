@@ -102,8 +102,10 @@ export class OtpOrderService {
       throw new Error(`Cannot cancel order in status: ${order.status}`);
     }
 
-    // Cancel order on live carrier if applicable
-    await providerService.cancelProviderOrder(order);
+    // Atomically mark order as CANCELLED immediately to prevent concurrent race conditions
+    order.status = 'CANCELLED';
+    order.cancelledAt = new Date().toISOString();
+    memoryStore.orders.set(order.id, order);
 
     // Release held funds back to customer available balance
     walletService.releaseHold(
@@ -113,9 +115,10 @@ export class OtpOrderService {
       'User requested order cancellation before SMS'
     );
 
-    order.status = 'CANCELLED';
-    order.cancelledAt = new Date().toISOString();
-    memoryStore.orders.set(order.id, order);
+    // Cancel order on live carrier in background if applicable
+    providerService.cancelProviderOrder(order).catch((err) => {
+      console.warn('[Carrier Cancel Warning]', err);
+    });
 
     return order;
   }
