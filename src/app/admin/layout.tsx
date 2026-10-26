@@ -139,7 +139,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   // When Authenticated as Admin:
-  const lowBalanceProviders = providers.filter((p) => p.balance < p.minBalanceAlert && p.enabled);
+  const lowBalanceProviders = providers.filter(
+    (p) => p.code !== 'sms_man' && p.balance < p.minBalanceAlert && p.enabled
+  );
 
   const adminSections = [
     {

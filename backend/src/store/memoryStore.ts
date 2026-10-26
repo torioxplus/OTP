@@ -260,21 +260,6 @@ export class MemoryStore {
         lastCheckedAt: 'Just now',
         totalNumbersAssigned: 0,
       },
-      {
-        id: 'prv-smsman',
-        name: 'SMS-Man',
-        code: 'sms_man',
-        enabled: false,
-        priority: 5,
-        balance: 0.0,
-        currency: 'RUB',
-        minBalanceAlert: 350.0,
-        apiHealth: 'operational',
-        pingMs: 94,
-        successRate: 100.0,
-        lastCheckedAt: 'Just now',
-        totalNumbersAssigned: 0,
-      },
     ];
     seedProviders.forEach((p) => this.providers.set(p.id, p));
 

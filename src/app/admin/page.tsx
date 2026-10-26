@@ -298,7 +298,7 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {providers.map((p) => {
+          {providers.filter((p) => p.code !== 'sms_man').map((p) => {
             const isLow = p.balance <= 0 && p.enabled;
             const isSyncing = syncingId === p.id;
             const depositUrl =
@@ -308,9 +308,7 @@ export default function AdminDashboardPage() {
                 ? 'https://tiger-sms.com/pay'
                 : p.code === 'five_sim'
                 ? 'https://5sim.net/payment'
-                : p.code === 'online_sim'
-                ? 'https://onlinesim.io/v2/payment'
-                : 'https://sms-man.com/payment';
+                : 'https://onlinesim.io/v2/payment';
 
             return (
               <div

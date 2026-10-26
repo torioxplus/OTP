@@ -25,15 +25,24 @@ export default function AdminProvidersPage() {
   const [minAlert, setMinAlert] = useState<number>(1000);
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
+  const [liveProviders, setLiveProviders] = useState<SmsProvider[]>([]);
 
-  // Fallback to cache or context
-  const cachedProviders = api.cache.get<{ providers: SmsProvider[] }>('/services/providers')?.data?.providers;
-  const providers = (cachedProviders && cachedProviders.length > 0) ? cachedProviders : contextProviders;
+  // Fetch live carrier providers directly from backend API
+  const refreshProviders = React.useCallback(() => {
+    api.services.getProviders({ force: true }).then((res) => {
+      if (res.success && res.data?.providers) {
+        setLiveProviders(res.data.providers);
+      }
+    }).catch(() => {});
+  }, []);
 
   React.useEffect(() => {
-    // Background fetch latest carrier status
-    api.services.getProviders({ force: false }).catch(() => {});
-  }, []);
+    refreshProviders();
+  }, [refreshProviders]);
+
+  // Show only active connected providers (exclude SMS-Man which has no API key)
+  const allProvidersList = liveProviders.length > 0 ? liveProviders : contextProviders;
+  const providers = allProvidersList.filter((p) => p.code !== 'sms_man');
 
   const handleOpenEdit = (p: SmsProvider) => {
     setEditingProvider(p);
@@ -55,6 +64,7 @@ export default function AdminProvidersPage() {
     setSyncingId(id);
     try {
       await syncProviderBalance(id);
+      refreshProviders();
     } finally {
       setSyncingId(null);
     }
@@ -64,6 +74,7 @@ export default function AdminProvidersPage() {
     setIsSyncingAll(true);
     try {
       await syncAllProviders();
+      refreshProviders();
     } finally {
       setIsSyncingAll(false);
     }
@@ -75,7 +86,7 @@ export default function AdminProvidersPage() {
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">SMS Provider Integrations</h1>
           <p className="text-xs text-zinc-400 mt-1">
-            Section 9, 11 & 35: Live Carrier Gateway adapters (5SIM, OnlineSIM, SMS-Man), priority routing, and upstream balance monitors.
+            Section 9, 11 & 35: Live Carrier Gateway adapters (Grizzly SMS, Tiger SMS, 5SIM, OnlineSIM), priority routing, and upstream balance monitors.
           </p>
         </div>
 
@@ -297,6 +308,7 @@ export default function AdminProvidersPage() {
                   <option value={1}>Priority 1 (Primary Carrier)</option>
                   <option value={2}>Priority 2 (Secondary Fallback)</option>
                   <option value={3}>Priority 3 (Tertiary Fallback)</option>
+                  <option value={4}>Priority 4 (Quaternary Fallback)</option>
                 </select>
                 <span className="text-[10px] text-zinc-500 mt-1 block">
                   The order engine always queries Priority 1 first. If margin or numbers fail, it falls back to 2, then 3.

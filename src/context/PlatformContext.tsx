@@ -163,13 +163,13 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     queueMicrotask(() => {
       try {
         const dataVer = readCache('otp_data_version');
-        if (dataVer !== 'v5_app_cache') {
+        if (dataVer !== 'v8_grizzly_tiger_only') {
           // Invalidate legacy mock caches (orders, transactions, mock balances, old providers)
           ['otp_orders', 'otp_txns', 'otp_wallet', 'otp_all_users', 'otp_tickets', 'otp_providers', 'otp_services'].forEach((k) => {
             try { localStorage.removeItem(k); } catch {}
           });
           api.cache.clearAll();
-          writeCache('otp_data_version', 'v5_app_cache');
+          writeCache('otp_data_version', 'v8_grizzly_tiger_only');
         } else {
           const savedWallet = readCache('otp_wallet');
           if (savedWallet) setWallet(JSON.parse(savedWallet));
@@ -191,7 +191,12 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           if (savedServices) setServices(JSON.parse(savedServices));
 
           const savedProviders = readCache('otp_providers');
-          if (savedProviders) setProviders(JSON.parse(savedProviders));
+          if (savedProviders) {
+            try {
+              const parsed: SmsProvider[] = JSON.parse(savedProviders);
+              setProviders(parsed.filter((p) => p.code !== 'sms_man'));
+            } catch {}
+          }
         }
 
         const savedLoggedIn = readCache('otp_is_logged_in');
@@ -251,14 +256,14 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Fetch services & providers from backend
         const [srvRes, provRes] = await Promise.all([
           api.services.getAll(),
-          api.services.getProviders(),
+          api.services.getProviders({ force: true }),
         ]);
 
         if (isMounted && srvRes.success && srvRes.data?.services?.length) {
           setServices(srvRes.data.services);
         }
         if (isMounted && provRes.success && provRes.data?.providers?.length) {
-          setProviders(provRes.data.providers);
+          setProviders(provRes.data.providers.filter((p) => p.code !== 'sms_man'));
         }
 
         const token = getStoredToken();
