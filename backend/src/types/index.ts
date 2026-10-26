@@ -75,7 +75,7 @@ export interface ServiceItem {
   iconName: string;
 }
 
-export type ProviderCode = 'five_sim' | 'online_sim' | 'sms_man';
+export type ProviderCode = 'five_sim' | 'online_sim' | 'sms_man' | 'grizzly_sms' | 'tiger_sms';
 
 export interface SmsProvider {
   id: string;

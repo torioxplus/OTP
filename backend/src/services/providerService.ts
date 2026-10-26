@@ -4,6 +4,8 @@ import { ServiceItem, SmsProvider, ReceivedSms, OtpOrder } from '../types/index.
 import { config } from '../config/index.js';
 import { fiveSimProvider } from '../providers/fiveSimProvider.js';
 import { onlineSimProvider } from '../providers/onlineSimProvider.js';
+import { grizzlySmsProvider } from '../providers/grizzlySmsProvider.js';
+import { tigerSmsProvider } from '../providers/tigerSmsProvider.js';
 
 export interface ProviderPurchaseResult {
   provider: SmsProvider;
@@ -114,6 +116,46 @@ export class ProviderService {
         }
       } catch (e) {
         console.error('[OnlineSIM Sync Error]', e);
+      }
+    }
+
+    // 3. Grizzly SMS
+    if (config.grizzlySmsApiKey) {
+      try {
+        const balance = await grizzlySmsProvider.getBalance();
+        const prv = memoryStore.providers.get('prv-grizzly');
+        if (prv) {
+          if (balance !== null) {
+            prv.balance = balance;
+            prv.apiHealth = 'operational';
+            prv.lastCheckedAt = 'Just now';
+            console.log(`[Grizzly SMS Sync] Live balance: ${balance} RUB`);
+          } else {
+            prv.apiHealth = 'degraded';
+          }
+        }
+      } catch (e) {
+        console.error('[Grizzly SMS Sync Error]', e);
+      }
+    }
+
+    // 4. Tiger SMS
+    if (config.tigerSmsApiKey) {
+      try {
+        const balance = await tigerSmsProvider.getBalance();
+        const prv = memoryStore.providers.get('prv-tiger');
+        if (prv) {
+          if (balance !== null) {
+            prv.balance = balance;
+            prv.apiHealth = 'operational';
+            prv.lastCheckedAt = 'Just now';
+            console.log(`[Tiger SMS Sync] Live balance: ${balance} RUB`);
+          } else {
+            prv.apiHealth = 'degraded';
+          }
+        }
+      } catch (e) {
+        console.error('[Tiger SMS Sync Error]', e);
       }
     }
   }
@@ -228,7 +270,63 @@ export class ProviderService {
       }
     }
 
-    // 3. Fallback Sandbox Number Generation (for offline dev / when provider balance is 0)
+    // 3. Live Grizzly SMS API Integration
+    if (provider.code === 'grizzly_sms' && config.grizzlySmsApiKey) {
+      try {
+        console.log(`[Grizzly SMS] Requesting virtual number for ${service.slug} (${countryCode})...`);
+        const realOrder = await grizzlySmsProvider.buyNumber(countryCode, service.slug);
+
+        if (realOrder.success && realOrder.phoneNumber && realOrder.orderId) {
+          provider.totalNumbersAssigned += 1;
+          provider.lastCheckedAt = 'Just now';
+
+          console.log(`[Grizzly SMS] ✅ Assigned Real Carrier Number: ${realOrder.phoneNumber} (Order #${realOrder.orderId})`);
+
+          return {
+            provider,
+            providerOrderId: realOrder.orderId,
+            phoneNumber: realOrder.phoneNumber,
+            providerCost: service.providerCostEstimate,
+            grossMargin: Math.round((service.sellingPrice - service.providerCostEstimate) * 100) / 100,
+            isReal: true,
+          };
+        } else {
+          console.warn(`[Grizzly SMS Notice] Order notice ("${realOrder.error}"). Providing compliant sandbox number.`);
+        }
+      } catch (err) {
+        console.warn('[Grizzly SMS Exception] Falling back to sandbox number:', err);
+      }
+    }
+
+    // 4. Live Tiger SMS API Integration
+    if (provider.code === 'tiger_sms' && config.tigerSmsApiKey) {
+      try {
+        console.log(`[Tiger SMS] Requesting virtual number for ${service.slug} (${countryCode})...`);
+        const realOrder = await tigerSmsProvider.buyNumber(countryCode, service.slug);
+
+        if (realOrder.success && realOrder.phoneNumber && realOrder.orderId) {
+          provider.totalNumbersAssigned += 1;
+          provider.lastCheckedAt = 'Just now';
+
+          console.log(`[Tiger SMS] ✅ Assigned Real Carrier Number: ${realOrder.phoneNumber} (Order #${realOrder.orderId})`);
+
+          return {
+            provider,
+            providerOrderId: realOrder.orderId,
+            phoneNumber: realOrder.phoneNumber,
+            providerCost: service.providerCostEstimate,
+            grossMargin: Math.round((service.sellingPrice - service.providerCostEstimate) * 100) / 100,
+            isReal: true,
+          };
+        } else {
+          console.warn(`[Tiger SMS Notice] Order notice ("${realOrder.error}"). Providing compliant sandbox number.`);
+        }
+      } catch (err) {
+        console.warn('[Tiger SMS Exception] Falling back to sandbox number:', err);
+      }
+    }
+
+    // 5. Fallback Sandbox Number Generation (for offline dev / when provider balance is 0)
     const country = memoryStore.countries.get(countryCode) || {
       dialCode: '+91',
       code: 'IN',
@@ -298,6 +396,44 @@ export class ProviderService {
       }
     }
 
+    // 3. Grizzly SMS Polling
+    if (order.providerId === 'prv-grizzly' && config.grizzlySmsApiKey) {
+      try {
+        const check = await grizzlySmsProvider.checkOrder(order.providerOrderId);
+        if (check.status === 'RECEIVED' && check.code) {
+          console.log(`[Grizzly SMS Poll] 📩 Received SMS for Order ${order.id}: "${check.code}"`);
+          return {
+            id: `SMS-${uuidv4().slice(0, 8)}`,
+            sender: order.serviceName,
+            message: check.fullSms || `Your verification code is ${check.code}`,
+            otpCode: check.code,
+            receivedAt: new Date().toISOString(),
+          };
+        }
+      } catch (e) {
+        console.error(`[Grizzly SMS Poll Error on ${order.id}]`, e);
+      }
+    }
+
+    // 4. Tiger SMS Polling
+    if (order.providerId === 'prv-tiger' && config.tigerSmsApiKey) {
+      try {
+        const check = await tigerSmsProvider.checkOrder(order.providerOrderId);
+        if (check.status === 'RECEIVED' && check.code) {
+          console.log(`[Tiger SMS Poll] 📩 Received SMS for Order ${order.id}: "${check.code}"`);
+          return {
+            id: `SMS-${uuidv4().slice(0, 8)}`,
+            sender: order.serviceName,
+            message: check.fullSms || `Your verification code is ${check.code}`,
+            otpCode: check.code,
+            receivedAt: new Date().toISOString(),
+          };
+        }
+      } catch (e) {
+        console.error(`[Tiger SMS Poll Error on ${order.id}]`, e);
+      }
+    }
+
     return null;
   }
 
@@ -320,6 +456,20 @@ export class ProviderService {
         console.log(`[OnlineSIM] Cancelled order ${order.providerOrderId} on carrier`);
       } catch (e) {
         console.warn(`[OnlineSIM Cancel Error]`, e);
+      }
+    } else if (order.providerId === 'prv-grizzly' && config.grizzlySmsApiKey) {
+      try {
+        await grizzlySmsProvider.cancelOrder(order.providerOrderId);
+        console.log(`[Grizzly SMS] Cancelled order ${order.providerOrderId} on carrier`);
+      } catch (e) {
+        console.warn(`[Grizzly SMS Cancel Error]`, e);
+      }
+    } else if (order.providerId === 'prv-tiger' && config.tigerSmsApiKey) {
+      try {
+        await tigerSmsProvider.cancelOrder(order.providerOrderId);
+        console.log(`[Tiger SMS] Cancelled order ${order.providerOrderId} on carrier`);
+      } catch (e) {
+        console.warn(`[Tiger SMS Cancel Error]`, e);
       }
     }
   }

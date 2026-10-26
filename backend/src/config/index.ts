@@ -23,6 +23,8 @@ export const config = {
   fiveSimApiKey: process.env.FIVESIM_API_KEY || '',
   onlineSimApiKey: process.env.ONLINESIM_API_KEY || '',
   smsManApiKey: process.env.SMSMAN_API_KEY || '',
+  grizzlySmsApiKey: process.env.GRIZZLY_SMS_API_KEY || '5bba7c0da2c431dd1e5c56294fabca18',
+  tigerSmsApiKey: process.env.TIGER_SMS_API_KEY || 'XkpIn1695lbXy0y9QCodIQdZ4rKXZh1H',
   // RUB to INR conversion rate for wholesale provider billing calculation
   rubToInrRate: parseFloat(process.env.RUB_TO_INR_RATE || '1.10'),
   razorpayKeyId: process.env.RAZORPAY_KEY_ID || '',

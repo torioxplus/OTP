@@ -297,12 +297,16 @@ export default function AdminDashboardPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {providers.map((p) => {
             const isLow = p.balance <= 0 && p.enabled;
             const isSyncing = syncingId === p.id;
             const depositUrl =
-              p.code === 'five_sim'
+              p.code === 'grizzly_sms'
+                ? 'https://grizzlysms.com/pay'
+                : p.code === 'tiger_sms'
+                ? 'https://tiger-sms.com/pay'
+                : p.code === 'five_sim'
                 ? 'https://5sim.net/payment'
                 : p.code === 'online_sim'
                 ? 'https://onlinesim.io/v2/payment'
