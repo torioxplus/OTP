@@ -34,11 +34,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     activeOrder,
     logout,
     isLoaded,
+    isLoggedIn,
   } = usePlatform();
 
   const [isRechargeOpen, setIsRechargeOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isBottomUserMenuOpen, setIsBottomUserMenuOpen] = useState(false);
+
+  // If not logged in, redirect away from protected dashboard
+  React.useEffect(() => {
+    if (isLoaded && !isLoggedIn) {
+      router.push('/auth/login');
+    }
+  }, [isLoaded, isLoggedIn, router]);
 
   const isAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin';
 

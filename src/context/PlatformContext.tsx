@@ -471,6 +471,9 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.removeItem('otp_is_logged_in');
     localStorage.removeItem('otp_user_role');
     localStorage.removeItem('otp_user_data');
+    if (typeof window !== 'undefined') {
+      window.location.href = '/auth/login';
+    }
   };
 
   // Switch Role
