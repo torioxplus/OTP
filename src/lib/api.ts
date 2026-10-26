@@ -11,7 +11,7 @@ import {
 import { clientCache, DEFAULT_TTLS } from './cache';
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+  process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 
 const TOKEN_KEY = 'otp_auth_token';
 
