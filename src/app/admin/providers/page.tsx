@@ -96,9 +96,9 @@ export default function AdminProvidersPage() {
           const isSyncing = syncingId === p.id;
           const depositUrl =
             p.code === 'five_sim'
-              ? 'https://5sim.net/pay'
+              ? 'https://5sim.net/payment'
               : p.code === 'online_sim'
-              ? 'https://onlinesim.io/payment'
+              ? 'https://onlinesim.io/v2/payment'
               : 'https://sms-man.com/payment';
 
           const hasLiveKey = p.code === 'five_sim' || p.code === 'online_sim';
