@@ -102,7 +102,7 @@ export const RechargeModal: React.FC<RechargeModalProps> = ({
                   instruments: [
                     {
                       method: 'upi',
-                      flows: ['qr'],
+                      flows: ['qr', 'intent', 'collect'],
                     },
                   ],
                 },

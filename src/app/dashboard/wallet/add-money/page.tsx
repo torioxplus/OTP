@@ -121,7 +121,7 @@ export default function AddMoneyPage() {
                   instruments: [
                     {
                       method: 'upi',
-                      flows: ['qr'],
+                      flows: ['qr', 'intent', 'collect'],
                     },
                   ],
                 },
