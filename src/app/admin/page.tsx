@@ -23,12 +23,13 @@ import {
 } from 'lucide-react';
 
 import { api } from '@/lib/api';
-import { User, OtpOrder } from '@/types';
+import { User, OtpOrder, SmsProvider } from '@/types';
+import { INITIAL_PROVIDERS } from '@/lib/mockData';
 
 export default function AdminDashboardPage() {
   const {
     orders,
-    providers,
+    providers: contextProviders,
     syncProviderBalance,
     syncAllProviders,
     services,
@@ -37,6 +38,16 @@ export default function AdminDashboardPage() {
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
   const [isRefreshingDashboard, setIsRefreshingDashboard] = useState(false);
+
+  // Guarantee all 4 connected providers are present
+  const candidateProviders = (contextProviders || []).filter((p) => p && p.code !== 'sms_man');
+  const existingMap = new Map<string, SmsProvider>();
+  candidateProviders.forEach((p) => existingMap.set(p.code, p));
+  const providers = INITIAL_PROVIDERS.map((initP) => {
+    const existing = existingMap.get(initP.code);
+    if (!existing) return initP;
+    return { ...initP, ...existing, name: initP.name, code: initP.code };
+  }).sort((a, b) => a.priority - b.priority);
 
   // Instant hydration from fast cache
   const cachedStats = api.cache.get<{ stats: Record<string, number> }>('/admin/dashboard')?.data?.stats;
@@ -297,7 +308,7 @@ export default function AdminDashboardPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-stretch">
           {providers.filter((p) => p.code !== 'sms_man').map((p) => {
             const isLow = p.balance <= 0 && p.enabled;
             const isSyncing = syncingId === p.id;
@@ -313,7 +324,7 @@ export default function AdminDashboardPage() {
             return (
               <div
                 key={p.id}
-                className={`p-4 rounded-xl border flex flex-col justify-between ${
+                className={`p-4 rounded-xl border flex flex-col justify-between h-full transition-all duration-200 hover:border-purple-500/40 ${
                   isLow
                     ? 'bg-amber-500/5 border-amber-500/30'
                     : 'bg-zinc-900/60 border-zinc-800'

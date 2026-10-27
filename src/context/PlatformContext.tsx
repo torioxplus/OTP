@@ -158,18 +158,48 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch {}
   };
 
+  const clearCacheKey = (key: string) => {
+    try { localStorage.removeItem(key); } catch {}
+    try {
+      if (typeof document !== 'undefined') {
+        document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`;
+      }
+    } catch {}
+  };
+
+  const mergeWithInitialProviders = (cachedList: SmsProvider[]): SmsProvider[] => {
+    const cleaned = (cachedList || []).filter((p) => p && p.code !== 'sms_man');
+    const existingMap = new Map<string, SmsProvider>();
+    cleaned.forEach((p) => existingMap.set(p.code, p));
+
+    const merged: SmsProvider[] = INITIAL_PROVIDERS.map((initP) => {
+      const existing = existingMap.get(initP.code);
+      if (!existing) return initP;
+      return {
+        ...initP,
+        ...existing,
+        name: initP.name,
+        code: initP.code,
+      };
+    });
+
+    return merged.sort((a, b) => a.priority - b.priority);
+  };
+
   // Load from localStorage and cookie cache on mount
   useEffect(() => {
     queueMicrotask(() => {
       try {
         const dataVer = readCache('otp_data_version');
-        if (dataVer !== 'v8_grizzly_tiger_only') {
+        if (dataVer !== 'v9_all_4_live_providers') {
           // Invalidate legacy mock caches (orders, transactions, mock balances, old providers)
           ['otp_orders', 'otp_txns', 'otp_wallet', 'otp_all_users', 'otp_tickets', 'otp_providers', 'otp_services'].forEach((k) => {
-            try { localStorage.removeItem(k); } catch {}
+            clearCacheKey(k);
           });
           api.cache.clearAll();
-          writeCache('otp_data_version', 'v8_grizzly_tiger_only');
+          setProviders(INITIAL_PROVIDERS);
+          writeCache('otp_data_version', 'v9_all_4_live_providers');
+          writeCache('otp_providers', JSON.stringify(INITIAL_PROVIDERS));
         } else {
           const savedWallet = readCache('otp_wallet');
           if (savedWallet) setWallet(JSON.parse(savedWallet));
@@ -194,8 +224,12 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           if (savedProviders) {
             try {
               const parsed: SmsProvider[] = JSON.parse(savedProviders);
-              setProviders(parsed.filter((p) => p.code !== 'sms_man'));
-            } catch {}
+              setProviders(mergeWithInitialProviders(parsed));
+            } catch {
+              setProviders(INITIAL_PROVIDERS);
+            }
+          } else {
+            setProviders(INITIAL_PROVIDERS);
           }
         }
 
@@ -263,7 +297,7 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           setServices(srvRes.data.services);
         }
         if (isMounted && provRes.success && provRes.data?.providers?.length) {
-          setProviders(provRes.data.providers.filter((p) => p.code !== 'sms_man'));
+          setProviders(mergeWithInitialProviders(provRes.data.providers));
         }
 
         const token = getStoredToken();

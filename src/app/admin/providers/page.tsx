@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { usePlatform } from '@/context/PlatformContext';
 import { SmsProvider } from '@/types';
 import { api } from '@/lib/api';
+import { INITIAL_PROVIDERS } from '@/lib/mockData';
 import {
   Cpu,
   RefreshCw,
@@ -30,7 +31,7 @@ export default function AdminProvidersPage() {
   // Fetch live carrier providers directly from backend API
   const refreshProviders = React.useCallback(() => {
     api.services.getProviders({ force: true }).then((res) => {
-      if (res.success && res.data?.providers) {
+      if (res.success && res.data?.providers && res.data.providers.length > 0) {
         setLiveProviders(res.data.providers);
       }
     }).catch(() => {});
@@ -40,9 +41,23 @@ export default function AdminProvidersPage() {
     refreshProviders();
   }, [refreshProviders]);
 
-  // Show only active connected providers (exclude SMS-Man which has no API key)
-  const allProvidersList = liveProviders.length > 0 ? liveProviders : contextProviders;
-  const providers = allProvidersList.filter((p) => p.code !== 'sms_man');
+  // Always guarantee all 4 connected providers (Grizzly, Tiger, 5SIM, OnlineSIM) are shown
+  const candidateList = (liveProviders.length > 0 ? liveProviders : contextProviders).filter(
+    (p) => p && p.code !== 'sms_man'
+  );
+  const existingMap = new Map<string, SmsProvider>();
+  candidateList.forEach((p) => existingMap.set(p.code, p));
+
+  const providers = INITIAL_PROVIDERS.map((initP) => {
+    const existing = existingMap.get(initP.code);
+    if (!existing) return initP;
+    return {
+      ...initP,
+      ...existing,
+      name: initP.name,
+      code: initP.code,
+    };
+  }).sort((a, b) => a.priority - b.priority);
 
   const handleOpenEdit = (p: SmsProvider) => {
     setEditingProvider(p);
@@ -101,7 +116,7 @@ export default function AdminProvidersPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
         {providers.map((p) => {
           const isLow = p.balance <= 0 && p.enabled;
           const isSyncing = syncingId === p.id;
@@ -112,9 +127,7 @@ export default function AdminProvidersPage() {
               ? 'https://tiger-sms.com/pay'
               : p.code === 'five_sim'
               ? 'https://5sim.net/payment'
-              : p.code === 'online_sim'
-              ? 'https://onlinesim.io/v2/payment'
-              : 'https://sms-man.com/payment';
+              : 'https://onlinesim.io/v2/payment';
 
           const hasLiveKey =
             p.code === 'five_sim' ||
@@ -125,7 +138,7 @@ export default function AdminProvidersPage() {
           return (
             <div
               key={p.id}
-              className={`p-6 rounded-2xl glass-panel border flex flex-col justify-between space-y-6 ${
+              className={`p-5 rounded-2xl glass-panel border flex flex-col justify-between h-full space-y-5 transition-all duration-200 hover:border-purple-500/40 ${
                 isLow ? 'border-amber-500/40 bg-amber-500/5' : 'border-zinc-800'
               }`}
             >
