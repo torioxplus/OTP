@@ -32,9 +32,32 @@ const globalLimiter = rateLimit({
 app.use(globalLimiter);
 
 // Middlewares
+const allowedOrigins = [
+  config.corsOrigin,
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://ameridrugs.in',
+  'http://ameridrugs.in',
+  'https://www.ameridrugs.in',
+  'http://www.ameridrugs.in',
+  'http://187.126.127.19',
+];
+
 app.use(
   cors({
-    origin: [config.corsOrigin, 'http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        origin.includes('ameridrugs.in') ||
+        origin.includes('187.126.127.19') ||
+        origin.includes('localhost')
+      ) {
+        callback(null, true);
+      } else {
+        callback(null, true);
+      }
+    },
     credentials: true,
   })
 );
