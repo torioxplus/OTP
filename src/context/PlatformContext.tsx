@@ -191,15 +191,17 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     queueMicrotask(() => {
       try {
         const dataVer = readCache('otp_data_version');
-        if (dataVer !== 'v9_all_4_live_providers') {
-          // Invalidate legacy mock caches (orders, transactions, mock balances, old providers)
+        if (dataVer !== 'v10_meesho_catalog') {
+          // Invalidate legacy mock caches (orders, transactions, mock balances, old providers, old services)
           ['otp_orders', 'otp_txns', 'otp_wallet', 'otp_all_users', 'otp_tickets', 'otp_providers', 'otp_services'].forEach((k) => {
             clearCacheKey(k);
           });
           api.cache.clearAll();
           setProviders(INITIAL_PROVIDERS);
-          writeCache('otp_data_version', 'v9_all_4_live_providers');
+          setServices(INITIAL_SERVICES);
+          writeCache('otp_data_version', 'v10_meesho_catalog');
           writeCache('otp_providers', JSON.stringify(INITIAL_PROVIDERS));
+          writeCache('otp_services', JSON.stringify(INITIAL_SERVICES));
         } else {
           const savedWallet = readCache('otp_wallet');
           if (savedWallet) setWallet(JSON.parse(savedWallet));

@@ -28,6 +28,7 @@ const COUNTRY_MAP: Record<string, string> = {
 };
 
 const SERVICE_MAP: Record<string, string> = {
+  meesho: 'hp',
   whatsapp: 'wa',
   telegram: 'tg',
   openai: 'dr',

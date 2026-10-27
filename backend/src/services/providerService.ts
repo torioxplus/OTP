@@ -33,7 +33,7 @@ const mapToFiveSimCountry = (code: string): string => {
 
 const mapToFiveSimProduct = (slug: string, serviceCode: string): string => {
   const map: Record<string, string> = {
-    whatsapp: 'whatsapp',
+    meesho: 'meesho',
     telegram: 'telegram',
     openai: 'openai',
     google: 'google',
@@ -62,7 +62,7 @@ const mapToOnlineSimCountry = (code: string): string => {
 
 const mapToOnlineSimService = (slug: string): string => {
   const map: Record<string, string> = {
-    whatsapp: 'whatsapp',
+    meesho: 'meesho',
     telegram: 'telegram',
     openai: 'openai',
     google: 'google',

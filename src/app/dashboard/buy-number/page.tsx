@@ -40,7 +40,7 @@ export default function BuyNumberPage() {
   } = usePlatform();
 
   const [selectedCountryCode, setSelectedCountryCode] = useState('IN');
-  const [selectedServiceId, setSelectedServiceId] = useState(services[0]?.id || 'srv_wa');
+  const [selectedServiceId, setSelectedServiceId] = useState(services[0]?.id || 'srv_meesho');
   const [selectedOperator, setSelectedOperator] = useState('any');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
