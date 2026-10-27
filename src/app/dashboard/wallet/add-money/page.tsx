@@ -113,25 +113,6 @@ export default function AddMoneyPage() {
           prefill: {
             method: 'upi',
           },
-          config: {
-            display: {
-              blocks: {
-                upi: {
-                  name: 'Scan & Pay via UPI QR Code',
-                  instruments: [
-                    {
-                      method: 'upi',
-                      flows: ['qr', 'intent', 'collect'],
-                    },
-                  ],
-                },
-              },
-              sequence: ['block.upi'],
-              preferences: {
-                show_default_blocks: true,
-              },
-            },
-          },
           theme: {
             color: '#9333ea',
           },
