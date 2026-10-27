@@ -17,7 +17,7 @@ import {
 import confetti from 'canvas-confetti';
 
 export default function AddMoneyPage() {
-  const { rechargeWallet, refreshWallet, wallet, isLoaded } = usePlatform();
+  const { rechargeWallet, refreshWallet, wallet, isLoaded, currentUser } = usePlatform();
   const [amount, setAmount] = useState<number>(500);
   const [customAmount, setCustomAmount] = useState<string>('');
   const [method, setMethod] = useState<'upi' | 'razorpay'>('upi');
@@ -80,7 +80,7 @@ export default function AddMoneyPage() {
           amount: amountInPaise,
           currency: 'INR',
           name: 'OTP Wallet Platform',
-          description: `Instant Wallet Recharge (₹${amount.toFixed(2)})`,
+          description: `Instant Wallet Recharge INR ${amount.toFixed(2)}`,
           order_id: isSandbox || orderId.startsWith('order_mock_') ? undefined : orderId,
           handler: async (response: Record<string, string>) => {
             setIsProcessing(true);
@@ -111,7 +111,13 @@ export default function AddMoneyPage() {
             },
           },
           prefill: {
-            method: 'upi',
+            name: currentUser?.name || 'Customer',
+            email: currentUser?.email || 'customer@ameridrugs.in',
+            contact: currentUser?.phone || '9510632004',
+          },
+          notes: {
+            userId: currentUser?.id || 'usr_direct',
+            platform: 'OTP_WALLET',
           },
           theme: {
             color: '#9333ea',
