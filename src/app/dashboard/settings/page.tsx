@@ -15,7 +15,7 @@ import {
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { currentUser, logout, deleteUserAccount } = usePlatform();
+  const { currentUser, logout } = usePlatform();
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
@@ -35,7 +35,11 @@ export default function SettingsPage() {
     setIsDeleting(true);
 
     setTimeout(() => {
-      deleteUserAccount();
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('otp_user_token');
+        localStorage.removeItem('otp_user_role');
+        localStorage.removeItem('otp_user');
+      }
       logout();
       router.push('/');
     }, 800);
