@@ -112,7 +112,7 @@ export default function AddMoneyPage() {
           },
           prefill: {
             name: currentUser?.name || 'Customer',
-            email: currentUser?.email || 'customer@ameridrugs.in',
+            email: currentUser?.email || 'customer@sim10.in',
             contact: currentUser?.phone || '9510632004',
           },
           notes: {
@@ -175,35 +175,35 @@ export default function AddMoneyPage() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Add Money to Wallet</h1>
-        <p className="text-xs text-zinc-400 mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Add Money to Wallet</h1>
+        <p className="text-xs text-slate-600 mt-1">
           Instant top-up via UPI or Razorpay. Zero gateway transaction fee.
         </p>
       </div>
 
       {successTxn ? (
-        <div className="p-8 rounded-2xl glass-panel-elevated border border-emerald-500/40 text-center space-y-4 max-w-md mx-auto">
-          <div className="w-16 h-16 mx-auto rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 animate-bounce">
+        <div className="p-8 rounded-2xl bg-white border-2 border-emerald-300 text-center space-y-4 max-w-md mx-auto shadow-lg">
+          <div className="w-16 h-16 mx-auto rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-600 animate-bounce">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-bold text-white">Wallet Recharged!</h2>
-          <p className="text-xs text-zinc-400">
+          <h2 className="text-xl font-bold text-slate-900">Wallet Recharged!</h2>
+          <p className="text-xs text-slate-600 font-medium">
             ₹{amount.toFixed(2)} has been credited to your available balance.
           </p>
-          <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800 font-mono text-xs text-zinc-300">
-            <span className="text-zinc-500">Transaction ID: </span>
-            <span className="text-emerald-400 font-bold">{successTxn}</span>
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs text-slate-800">
+            <span className="text-slate-500 font-medium">Transaction ID: </span>
+            <span className="text-emerald-700 font-bold">{successTxn}</span>
           </div>
           <div className="flex gap-3 pt-2">
             <button
               onClick={() => setSuccessTxn(null)}
-              className="flex-1 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition cursor-pointer"
             >
               Add More
             </button>
             <Link
               href="/dashboard/buy-number"
-              className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold text-center flex items-center justify-center gap-1 shadow-md shadow-emerald-500/20"
+              className="flex-1 py-2.5 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-bold text-center flex items-center justify-center gap-1 shadow-sm transition"
             >
               <span>Buy Number</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -215,8 +215,8 @@ export default function AddMoneyPage() {
           {/* Left Form */}
           <div className="lg:col-span-7 space-y-6">
             {/* Amount Selection */}
-            <div className="p-6 rounded-2xl glass-panel border border-zinc-800 space-y-4">
-              <label className="block text-xs font-bold text-zinc-200 uppercase tracking-wider">
+            <div className="p-6 rounded-2xl bg-white border-2 border-slate-200 shadow-sm space-y-4">
+              <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
                 1. Select Recharge Amount
               </label>
 
@@ -226,10 +226,10 @@ export default function AddMoneyPage() {
                     key={val}
                     type="button"
                     onClick={() => handleSelectPreset(val)}
-                    className={`py-3 rounded-xl border text-sm font-mono font-bold transition cursor-pointer ${
+                    className={`py-3 rounded-xl border-2 text-sm font-mono font-bold transition cursor-pointer ${
                       amount === val && !customAmount
-                        ? 'bg-emerald-500/15 border-emerald-500 text-emerald-400 shadow-md shadow-emerald-500/10'
-                        : 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                        ? 'bg-slate-50 border-[#0f172a] text-[#0f172a] shadow-xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                     }`}
                   >
                     ₹{val}
@@ -238,11 +238,11 @@ export default function AddMoneyPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   Or enter custom amount (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-zinc-500">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-slate-400">
                     ₹
                   </span>
                   <input
@@ -251,15 +251,15 @@ export default function AddMoneyPage() {
                     placeholder="e.g. 750"
                     value={customAmount}
                     onChange={handleCustomChange}
-                    className="w-full pl-8 pr-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 text-sm focus:outline-none focus:border-emerald-500"
+                    className="w-full pl-8 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 text-sm font-semibold focus:outline-none focus:border-slate-900 shadow-xs"
                   />
                 </div>
               </div>
             </div>
 
             {/* Payment Method */}
-            <div className="p-6 rounded-2xl glass-panel border border-zinc-800 space-y-4">
-              <label className="block text-xs font-bold text-zinc-200 uppercase tracking-wider">
+            <div className="p-6 rounded-2xl bg-white border-2 border-slate-200 shadow-sm space-y-4">
+              <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
                 2. Select Gateway / Method
               </label>
 
@@ -267,39 +267,39 @@ export default function AddMoneyPage() {
                 <button
                   type="button"
                   onClick={() => setMethod('upi')}
-                  className={`p-4 rounded-xl border flex flex-col items-center gap-2 text-center transition cursor-pointer ${
+                  className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 text-center transition cursor-pointer ${
                     method === 'upi'
-                      ? 'bg-emerald-500/15 border-emerald-500 text-white shadow-sm shadow-emerald-500/10'
-                      : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                      ? 'bg-slate-50 border-[#0f172a] text-[#0f172a] shadow-xs'
+                      : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                   }`}
                 >
-                  <QrCode className="w-5 h-5 text-emerald-400" />
+                  <QrCode className="w-5 h-5 text-[#0f172a]" />
                   <span className="text-xs font-bold">UPI / QR Code</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setMethod('razorpay')}
-                  className={`p-4 rounded-xl border flex flex-col items-center gap-2 text-center transition cursor-pointer ${
+                  className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 text-center transition cursor-pointer ${
                     method === 'razorpay'
-                      ? 'bg-blue-500/15 border-blue-500 text-white shadow-sm shadow-blue-500/10'
-                      : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                      ? 'bg-slate-50 border-[#0f172a] text-[#0f172a] shadow-xs'
+                      : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                   }`}
                 >
-                  <CreditCard className="w-5 h-5 text-blue-400" />
+                  <CreditCard className="w-5 h-5 text-[#0f172a]" />
                   <span className="text-xs font-bold">Razorpay</span>
                 </button>
               </div>
 
               {/* QR Code Demo Preview for UPI */}
               {method === 'upi' && (
-                <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-between gap-4">
-                  <div className="w-20 h-20 bg-white p-1 rounded-xl flex items-center justify-center shrink-0">
-                    <QrCode className="w-16 h-16 text-black" />
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4">
+                  <div className="w-20 h-20 bg-white p-1 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 shadow-xs">
+                    <QrCode className="w-16 h-16 text-slate-900" />
                   </div>
                   <div className="space-y-1 text-xs">
-                    <span className="font-bold text-zinc-200">Scan & Pay via any UPI App</span>
-                    <p className="text-zinc-500 text-[11px]">
+                    <span className="font-bold text-slate-900">Scan & Pay via any UPI App</span>
+                    <p className="text-slate-600 font-medium text-[11px]">
                       GPay, PhonePe, Paytm, BHIM, Cred or any bank app. Verified automatically in &lt;3s.
                     </p>
                   </div>
@@ -310,39 +310,39 @@ export default function AddMoneyPage() {
 
           {/* Right Summary */}
           <div className="lg:col-span-5">
-            <div className="p-6 rounded-2xl glass-panel-elevated border border-zinc-800 space-y-6">
-              <h3 className="text-sm font-bold text-white">Payment Summary</h3>
+            <div className="p-6 rounded-2xl bg-white border-2 border-slate-200 shadow-md space-y-6">
+              <h3 className="text-sm font-bold text-slate-900">Payment Summary</h3>
 
               <div className="space-y-3 text-xs">
-                <div className="flex justify-between py-1 border-b border-zinc-800">
-                  <span className="text-zinc-400">Recharge Amount:</span>
-                  <span className="font-mono font-bold text-zinc-100">₹{amount.toFixed(2)}</span>
+                <div className="flex justify-between py-1 border-b border-slate-200">
+                  <span className="text-slate-600 font-semibold">Recharge Amount:</span>
+                  <span className="font-mono font-black text-slate-900">₹{amount.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-zinc-800">
-                  <span className="text-zinc-400">Gateway Handling Fee:</span>
-                  <span className="text-emerald-400 font-bold">₹0.00 (Waived)</span>
+                <div className="flex justify-between py-1 border-b border-slate-200">
+                  <span className="text-slate-600 font-semibold">Gateway Handling Fee:</span>
+                  <span className="text-emerald-700 font-bold">₹0.00 (Waived)</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-zinc-800">
-                  <span className="text-zinc-400">Net Credit to Available Balance:</span>
-                  <span className="font-mono font-bold text-emerald-400 text-sm">
+                <div className="flex justify-between py-1 border-b border-slate-200">
+                  <span className="text-slate-600 font-semibold">Net Credit to Available Balance:</span>
+                  <span className="font-mono font-black text-[#0f172a] text-sm">
                     ₹{amount.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-zinc-400">Current Balance:</span>
-                  <span className="font-mono text-zinc-300">
+                  <span className="text-slate-600 font-semibold">Current Balance:</span>
+                  <span className="font-mono text-slate-900 font-bold">
                     {!isLoaded ? (
-                      <span className="inline-block w-14 h-3.5 bg-zinc-800 animate-pulse rounded my-0.5" />
+                      <span className="inline-block w-14 h-3.5 bg-slate-200 animate-pulse rounded my-0.5" />
                     ) : (
                       `₹${wallet.availableBalance.toFixed(2)}`
                     )}
                   </span>
                 </div>
-                <div className="flex justify-between py-1 font-bold text-white pt-2 border-t border-zinc-800">
+                <div className="flex justify-between py-1 font-bold text-slate-900 pt-2 border-t border-slate-200">
                   <span>Balance After Recharge:</span>
-                  <span className="font-mono text-emerald-400">
+                  <span className="font-mono font-black text-[#0f172a]">
                     {!isLoaded ? (
-                      <span className="inline-block w-14 h-3.5 bg-zinc-800 animate-pulse rounded my-0.5" />
+                      <span className="inline-block w-14 h-3.5 bg-slate-200 animate-pulse rounded my-0.5" />
                     ) : (
                       `₹${(wallet.availableBalance + amount).toFixed(2)}`
                     )}
@@ -354,7 +354,7 @@ export default function AddMoneyPage() {
                 type="button"
                 onClick={handlePay}
                 disabled={isProcessing || amount <= 0}
-                className="w-full py-3.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 disabled:opacity-50 cursor-pointer"
+                className="w-full py-4 px-4 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
               >
                 {isProcessing ? (
                   <>
@@ -363,14 +363,14 @@ export default function AddMoneyPage() {
                   </>
                 ) : (
                   <>
-                    <Zap className="w-4 h-4 fill-black" />
+                    <Zap className="w-4 h-4 fill-white" />
                     <span>Pay ₹{amount.toFixed(2)} & Recharge</span>
                   </>
                 )}
               </button>
 
-              <div className="flex items-center gap-2 text-[11px] text-zinc-400">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div className="flex items-center gap-2 text-[11px] text-slate-600 font-medium">
+                <ShieldCheck className="w-4 h-4 text-[#0f172a] shrink-0" />
                 <span>PCI-DSS compliant 256-bit encryption. Ledger verification instant.</span>
               </div>
             </div>

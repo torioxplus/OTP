@@ -47,10 +47,10 @@ export default function TransactionsLedgerPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             Financial Transaction Ledger
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-slate-600 mt-1">
             Complete immutable ledger of all credits, holds, debits, releases, and adjustments.
           </p>
         </div>
@@ -58,7 +58,7 @@ export default function TransactionsLedgerPage() {
         <button
           type="button"
           onClick={exportCSV}
-          className="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 transition border border-zinc-700/80"
+          className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition border border-slate-200 shadow-xs"
         >
           <Download className="w-3.5 h-3.5" />
           <span>Export Ledger CSV</span>
@@ -68,13 +68,13 @@ export default function TransactionsLedgerPage() {
       {/* Filters Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
         <div className="sm:col-span-8 relative">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Search by transaction ID, reference, or description..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-100 text-xs placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition"
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs placeholder-slate-400 focus:outline-none focus:border-slate-900 shadow-xs"
           />
         </div>
 
@@ -82,7 +82,7 @@ export default function TransactionsLedgerPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-100 text-xs font-medium focus:outline-none focus:border-emerald-500 transition cursor-pointer"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-xs font-semibold focus:outline-none focus:border-slate-900 shadow-xs cursor-pointer"
           >
             <option value="ALL">All Transaction Types</option>
             <option value="CREDIT_RECHARGE">CREDIT_RECHARGE</option>
@@ -97,10 +97,10 @@ export default function TransactionsLedgerPage() {
       </div>
 
       {/* Ledger Table */}
-      <div className="rounded-2xl glass-panel border border-zinc-800/80 overflow-hidden shadow-xl">
+      <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-900/90 text-zinc-400 font-semibold border-b border-zinc-800">
+            <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
               <tr>
                 <th className="px-4 py-3">Txn ID</th>
                 <th className="px-4 py-3">Type</th>
@@ -112,7 +112,7 @@ export default function TransactionsLedgerPage() {
                 <th className="px-4 py-3">Timestamp</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-slate-200">
               {filteredTxns.map((txn) => {
                 const isCredit =
                   txn.type === 'CREDIT_RECHARGE' ||
@@ -120,21 +120,21 @@ export default function TransactionsLedgerPage() {
                   txn.type === 'REFUND' ||
                   txn.type === 'ADMIN_CREDIT';
                 return (
-                  <tr key={txn.id} className="hover:bg-zinc-900/40 transition">
-                    <td className="px-4 py-3.5 font-mono font-bold text-zinc-200">{txn.id}</td>
+                  <tr key={txn.id} className="hover:bg-slate-50/80 transition">
+                    <td className="px-4 py-3.5 font-mono font-bold text-slate-900">{txn.id}</td>
 
                     <td className="px-4 py-3.5">
                       <span
                         className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                           txn.type === 'CREDIT_RECHARGE' || txn.type === 'ADMIN_CREDIT'
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                             : txn.type === 'HOLD_OTP_PURCHASE'
-                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                            ? 'bg-amber-100 text-amber-800 border border-amber-300'
                             : txn.type === 'RELEASE_HOLD' || txn.type === 'REFUND'
-                            ? 'bg-teal-500/10 text-teal-400 border border-teal-500/20'
+                            ? 'bg-blue-100 text-blue-800 border border-blue-300'
                             : txn.type === 'DEBIT_OTP_PURCHASE'
-                            ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
-                            : 'bg-zinc-800 text-zinc-400'
+                            ? 'bg-slate-100 text-slate-800 border border-slate-300'
+                            : 'bg-slate-100 text-slate-700 border border-slate-300'
                         }`}
                       >
                         {txn.type}
@@ -142,30 +142,30 @@ export default function TransactionsLedgerPage() {
                     </td>
 
                     <td className="px-4 py-3.5 max-w-xs">
-                      <span className="text-zinc-200 block truncate">{txn.description}</span>
-                      <span className="text-[10px] font-mono text-zinc-500">
+                      <span className="text-slate-900 font-medium block truncate">{txn.description}</span>
+                      <span className="text-[10px] font-mono text-slate-500 font-medium">
                         Ref: {txn.referenceId}
                       </span>
                     </td>
 
                     <td
-                      className={`px-4 py-3.5 font-mono font-bold ${
-                        isCredit ? 'text-emerald-400' : 'text-zinc-200'
+                      className={`px-4 py-3.5 font-mono font-black ${
+                        isCredit ? 'text-emerald-700' : 'text-slate-900'
                       }`}
                     >
                       {isCredit ? '+' : '-'}₹{txn.amount.toFixed(2)}
                     </td>
 
-                    <td className="px-4 py-3.5 font-mono text-zinc-400">
+                    <td className="px-4 py-3.5 font-mono text-slate-500 font-medium">
                       ₹{txn.balanceBefore.toFixed(2)} →{' '}
-                      <span className="text-zinc-200 font-bold">₹{txn.balanceAfter.toFixed(2)}</span>
+                      <span className="text-slate-900 font-bold">₹{txn.balanceAfter.toFixed(2)}</span>
                     </td>
 
-                    <td className="px-4 py-3.5 font-mono text-zinc-400">
+                    <td className="px-4 py-3.5 font-mono text-slate-500 font-medium">
                       ₹{txn.holdBefore.toFixed(2)} →{' '}
                       <span
                         className={
-                          txn.holdAfter > 0 ? 'text-amber-400 font-bold' : 'text-zinc-300'
+                          txn.holdAfter > 0 ? 'text-amber-700 font-bold' : 'text-slate-700 font-medium'
                         }
                       >
                         ₹{txn.holdAfter.toFixed(2)}
@@ -173,12 +173,12 @@ export default function TransactionsLedgerPage() {
                     </td>
 
                     <td className="px-4 py-3.5">
-                      <span className="text-[10px] font-semibold text-emerald-400 uppercase">
+                      <span className="text-[10px] font-bold text-emerald-700 uppercase">
                         {txn.status}
                       </span>
                     </td>
 
-                    <td className="px-4 py-3.5 text-zinc-400 text-[11px] whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-slate-600 font-medium text-[11px] whitespace-nowrap">
                       {new Date(txn.createdAt).toLocaleString([], {
                         month: 'short',
                         day: 'numeric',

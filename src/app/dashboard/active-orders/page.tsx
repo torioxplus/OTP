@@ -46,8 +46,8 @@ export default function ActiveOrdersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Active Orders</h1>
-          <p className="hidden sm:block text-xs text-zinc-400 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Active Orders</h1>
+          <p className="hidden sm:block text-xs text-slate-600 mt-1">
             Monitor incoming SMS in real-time. Orders auto-expire after 5 minutes if no SMS is
             received.
           </p>
@@ -55,28 +55,28 @@ export default function ActiveOrdersPage() {
 
         <Link
           href="/dashboard/buy-number"
-          className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition flex items-center gap-1.5 shadow-md shadow-emerald-500/20"
+          className="px-4 py-2 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs transition flex items-center gap-1.5 shadow-sm cursor-pointer"
         >
-          <Zap className="w-4 h-4 fill-black" />
+          <Zap className="w-4 h-4 fill-white" />
           <span>New Order</span>
         </Link>
       </div>
 
       {activeList.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl glass-panel border border-zinc-800 space-y-4">
-          <div className="w-16 h-16 mx-auto rounded-full bg-zinc-800/80 border border-zinc-700 flex items-center justify-center text-zinc-400">
-            <Radio className="w-8 h-8 text-zinc-500" />
+        <div className="p-12 text-center rounded-2xl bg-white border-2 border-slate-200 shadow-sm space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500">
+            <Radio className="w-8 h-8 text-slate-500" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">No active orders right now</h3>
-            <p className="text-xs text-zinc-400 mt-1 max-w-sm mx-auto">
+            <h3 className="text-base font-bold text-slate-900">No active orders right now</h3>
+            <p className="text-xs text-slate-600 mt-1 max-w-sm mx-auto font-medium">
               You do not have any numbers currently waiting for an OTP. Start by getting a temporary
               number.
             </p>
           </div>
           <Link
             href="/dashboard/buy-number"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs shadow-lg shadow-emerald-500/20 transition"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs shadow-sm transition cursor-pointer"
           >
             <span>Reserve Virtual Number</span>
             <ArrowRight className="w-4 h-4" />
@@ -87,32 +87,32 @@ export default function ActiveOrdersPage() {
           {activeList.map((order) => (
             <div
               key={order.id}
-              className="p-6 rounded-2xl glass-panel-elevated border border-emerald-500/40 shadow-xl space-y-4"
+              className="p-6 rounded-2xl bg-white border-2 border-slate-200 shadow-md space-y-4"
             >
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
                     <ServiceIcon name={order.serviceIcon} className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                    <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
                       {order.serviceName}
-                      <span className="text-xs font-normal text-zinc-400">
+                      <span className="text-xs font-semibold text-slate-600">
                         ({order.countryFlag} {order.countryName})
                       </span>
                     </h3>
-                    <span className="text-[11px] font-mono text-zinc-500">
+                    <span className="text-[11px] font-mono text-slate-500 font-medium">
                       ID: {order.id} • Provider: {order.providerName}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="bg-zinc-950/80 px-3 py-1.5 rounded-xl border border-zinc-800">
+                  <div className="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-slate-800 font-bold">
                     <OtpCountdownTimer expiresAt={order.websiteExpiresAt} />
                   </div>
-                  <span className="px-3 py-1 rounded-xl text-xs font-bold uppercase bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-amber-400" />
+                  <span className="px-3 py-1 rounded-xl text-xs font-bold uppercase bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                     Waiting for SMS
                   </span>
                 </div>
@@ -120,19 +120,19 @@ export default function ActiveOrdersPage() {
 
               {/* Number and Simulator Controls */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                <div className="md:col-span-6 p-4 rounded-xl bg-zinc-950/80 border border-zinc-800 flex items-center justify-between">
+                <div className="md:col-span-6 p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-zinc-500 uppercase font-semibold block">
+                    <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider block">
                       Assigned Number
                     </span>
-                    <span className="text-xl font-mono font-bold text-white tracking-wider">
+                    <span className="text-xl font-mono font-bold text-slate-900 tracking-wider">
                       {order.phoneNumber}
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleCopy(order.phoneNumber, order.id)}
-                    className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition cursor-pointer"
+                    className="p-2 rounded-lg bg-[#0f172a] hover:bg-[#1e293b] text-white transition cursor-pointer"
                   >
                     {copiedId === order.id ? (
                       <Check className="w-4 h-4 text-emerald-400" />
@@ -146,16 +146,16 @@ export default function ActiveOrdersPage() {
                   <button
                     type="button"
                     onClick={() => handleSimulate(order.id)}
-                    className="px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                     <span>Simulate Incoming SMS</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => cancelOrder(order.id)}
-                    className="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                   >
                     <XCircle className="w-3.5 h-3.5" />
                     <span>Cancel & Refund</span>

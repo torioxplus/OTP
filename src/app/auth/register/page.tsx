@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePlatform } from '@/context/PlatformContext';
+import { Logo } from '@/components/Logo';
 import {
-  Radio,
   Lock,
   Mail,
   User,
@@ -68,44 +68,35 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-600/15 blur-[100px] rounded-full pointer-events-none -z-10" />
-
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/25 group-hover:bg-blue-500 transition">
-            <Radio className="w-5 h-5 text-white" />
-          </div>
-          <span className="font-extrabold text-xl tracking-tight text-white">
-            OTP<span className="text-emerald-400">Wallet</span>
-          </span>
-        </Link>
-        <h2 className="text-2xl font-bold text-white tracking-tight">Create your account</h2>
-        <p className="mt-1 text-xs text-zinc-400">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center flex flex-col items-center">
+        <Logo size="lg" className="mb-4" />
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Create your account</h2>
+        <p className="mt-1 text-xs font-medium text-slate-600">
           Get started with instant virtual numbers and OTP verification
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="glass-panel-elevated p-6 sm:p-8 rounded-2xl border border-zinc-800 space-y-6">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-xl space-y-6">
           {/* Welcome Promo Badge */}
-          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-xs text-emerald-400">
-            <Sparkles className="w-4 h-4 shrink-0" />
+          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 flex items-center gap-3 text-xs font-bold text-slate-900">
+            <Sparkles className="w-4 h-4 shrink-0 text-slate-800" />
             <span>Instant wallet setup. Register and receive SMS OTPs immediately!</span>
           </div>
 
           {errorMessage && (
-            <div className="p-3.5 rounded-xl bg-rose-950/50 border border-rose-800/80 flex items-start gap-2.5 text-rose-300 text-xs animate-in fade-in duration-200">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
-              <div className="leading-relaxed">{errorMessage}</div>
+            <div className="p-3.5 rounded-xl bg-rose-50 border-2 border-rose-200 flex items-start gap-2.5 text-rose-800 text-xs animate-in fade-in duration-200">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+              <div className="leading-relaxed font-semibold">{errorMessage}</div>
             </div>
           )}
 
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Full Name</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">Full Name</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <User className="w-4 h-4" />
                 </div>
                 <input
@@ -117,15 +108,15 @@ export default function RegisterPage() {
                     if (errorMessage) setErrorMessage(null);
                   }}
                   placeholder="Your Name"
-                  className="w-full pl-10 pr-3 py-2.5 bg-zinc-900 border border-zinc-700/80 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500 text-xs transition"
+                  className="w-full pl-10 pr-3 py-2.5 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0f172a] text-xs font-medium transition"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Email Address</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
@@ -138,17 +129,17 @@ export default function RegisterPage() {
                   }}
                   placeholder="name@example.com"
                   autoComplete="email"
-                  className="w-full pl-10 pr-3 py-2.5 bg-zinc-900 border border-zinc-700/80 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500 text-xs transition"
+                  className="w-full pl-10 pr-3 py-2.5 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0f172a] text-xs font-medium transition"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                Phone Number <span className="text-zinc-500 font-normal">(Optional)</span>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                Phone Number <span className="text-slate-400 font-normal">(Optional)</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <Phone className="w-4 h-4" />
                 </div>
                 <input
@@ -159,15 +150,15 @@ export default function RegisterPage() {
                     if (errorMessage) setErrorMessage(null);
                   }}
                   placeholder="+91 98765 43210"
-                  className="w-full pl-10 pr-3 py-2.5 bg-zinc-900 border border-zinc-700/80 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500 text-xs transition"
+                  className="w-full pl-10 pr-3 py-2.5 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0f172a] text-xs font-medium transition"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Password</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">Password</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -180,12 +171,12 @@ export default function RegisterPage() {
                   }}
                   placeholder="At least 6 characters"
                   autoComplete="new-password"
-                  className="w-full pl-10 pr-10 py-2.5 bg-zinc-900 border border-zinc-700/80 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500 text-xs transition"
+                  className="w-full pl-10 pr-10 py-2.5 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0f172a] text-xs font-medium transition"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -199,9 +190,9 @@ export default function RegisterPage() {
                 required
                 checked={agree}
                 onChange={(e) => setAgree(e.target.checked)}
-                className="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-emerald-500 focus:ring-emerald-500 cursor-pointer"
+                className="w-4 h-4 rounded border-slate-300 text-[#0f172a] focus:ring-[#0f172a] cursor-pointer"
               />
-              <label htmlFor="terms" className="text-xs text-zinc-400 cursor-pointer select-none">
+              <label htmlFor="terms" className="text-xs font-medium text-slate-600 cursor-pointer select-none">
                 I agree to the Terms of Service and Privacy Policy
               </label>
             </div>
@@ -209,10 +200,10 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading || !name.trim() || !email.trim() || !password.trim()}
-              className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer mt-2"
+              className="w-full py-3 px-4 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] disabled:opacity-50 text-white font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-md cursor-pointer mt-2"
             >
               {isLoading ? (
-                <span>Registering Account in Database...</span>
+                <span>Registering Account...</span>
               ) : (
                 <>
                   <span>Create Account</span>
@@ -222,9 +213,9 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <div className="pt-2 border-t border-zinc-800/80 text-center text-xs text-zinc-400">
+          <div className="pt-2 border-t border-slate-100 text-center text-xs font-medium text-slate-600">
             Already have an account?{' '}
-            <Link href="/auth/login" className="font-semibold text-emerald-400 hover:text-emerald-300 ml-1 transition">
+            <Link href="/auth/login" className="font-bold text-slate-900 hover:underline ml-1 transition">
               Sign In
             </Link>
           </div>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none">
+  <defs>
+    <linearGradient id="simFav" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+  </defs>
+  <!-- SIM shape -->
+  <path d="M6 3C4.34315 3 3 4.34315 3 6V26C3 27.6569 4.34315 29 6 29H26C27.6569 29 29 27.6569 29 26V11L21 3H6Z" fill="url(#simFav)" />
+  <!-- Chip -->
+  <rect x="9" y="11" width="14" height="13" rx="2.5" fill="#60a5fa" />
+  <path d="M9 15H13M9 19H13M23 15H19M23 19H19M16 11V13M16 22V24M13 15V19H19V15H13Z" stroke="#ffffff" stroke-width="1" stroke-linecap="round" />
+  <!-- Signal Dot -->
+  <circle cx="24" cy="7" r="1.5" fill="#93c5fd" />
+</svg>

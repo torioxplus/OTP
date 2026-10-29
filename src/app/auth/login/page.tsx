@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePlatform } from '@/context/PlatformContext';
+import { Logo } from '@/components/Logo';
 import {
-  Radio,
   Lock,
   Mail,
   ArrowRight,
@@ -57,40 +57,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-600/10 blur-[100px] rounded-full pointer-events-none -z-10" />
-
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/25 group-hover:bg-blue-500 transition">
-            <Radio className="w-5 h-5 text-white" />
-          </div>
-          <span className="font-extrabold text-xl tracking-tight text-white">
-            OTP<span className="text-emerald-400">Wallet</span>
-          </span>
-        </Link>
-        <h2 className="text-2xl font-bold text-white tracking-tight">Sign in to your account</h2>
-        <p className="mt-1 text-xs text-zinc-400">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center flex flex-col items-center">
+        <Logo size="lg" className="mb-4" />
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Sign in to your account</h2>
+        <p className="mt-1 text-xs font-medium text-slate-600">
           Manage temporary numbers, active orders, and wallet balance
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="glass-panel-elevated p-6 sm:p-8 rounded-2xl border border-zinc-800 space-y-6">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-xl space-y-6">
           {errorMessage && (
-            <div className="p-3.5 rounded-xl bg-rose-950/50 border border-rose-800/80 flex items-start gap-2.5 text-rose-300 text-xs animate-in fade-in duration-200">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
-              <div className="leading-relaxed">{errorMessage}</div>
+            <div className="p-3.5 rounded-xl bg-rose-50 border-2 border-rose-200 flex items-start gap-2.5 text-rose-800 text-xs animate-in fade-in duration-200">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+              <div className="leading-relaxed font-semibold">{errorMessage}</div>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
@@ -103,23 +94,23 @@ export default function LoginPage() {
                   }}
                   placeholder="name@example.com"
                   autoComplete="email"
-                  className="w-full pl-10 pr-3 py-2.5 bg-zinc-900 border border-zinc-700/80 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500 text-xs transition"
+                  className="w-full pl-10 pr-3 py-2.5 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0f172a] text-xs font-medium transition"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold text-zinc-300">Password</label>
+                <label className="block text-xs font-bold text-slate-700">Password</label>
                 <Link
                   href="/auth/forgot-password"
-                  className="text-[11px] text-emerald-400 hover:text-emerald-300 transition"
+                  className="text-[11px] font-bold text-slate-900 hover:underline transition"
                 >
                   Forgot password?
                 </Link>
               </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -132,12 +123,12 @@ export default function LoginPage() {
                   }}
                   placeholder="Enter your password"
                   autoComplete="current-password"
-                  className="w-full pl-10 pr-10 py-2.5 bg-zinc-900 border border-zinc-700/80 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500 text-xs transition"
+                  className="w-full pl-10 pr-10 py-2.5 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0f172a] text-xs font-medium transition"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -147,10 +138,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading || !email.trim() || !password.trim()}
-              className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer mt-2"
+              className="w-full py-3 px-4 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] disabled:opacity-50 text-white font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-md cursor-pointer mt-2"
             >
               {isLoading ? (
-                <span>Authenticating with Database...</span>
+                <span>Authenticating...</span>
               ) : (
                 <>
                   <span>Sign In</span>
@@ -160,11 +151,11 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="pt-2 border-t border-zinc-800/80 text-center text-xs text-zinc-400">
+          <div className="pt-2 border-t border-slate-100 text-center text-xs font-medium text-slate-600">
             Don&apos;t have an account?{' '}
             <Link
               href="/auth/register"
-              className="font-semibold text-emerald-400 hover:text-emerald-300 ml-1 transition"
+              className="font-bold text-slate-900 hover:underline ml-1 transition"
             >
               Create Account
             </Link>

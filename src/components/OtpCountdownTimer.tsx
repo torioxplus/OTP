@@ -83,7 +83,7 @@ export const OtpCountdownTimer: React.FC<OtpCountdownTimerProps> = ({
               ? 'bg-rose-500'
               : isLowTime
               ? 'bg-amber-400'
-              : 'bg-emerald-500'
+              : 'bg-blue-600'
           }`}
           style={{ width: `${percentage}%` }}
         />

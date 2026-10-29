@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Radio, Mail, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Logo } from '@/components/Logo';
+import { Mail, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -14,37 +15,30 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/25 group-hover:bg-blue-500 transition">
-            <Radio className="w-5 h-5 text-white" />
-          </div>
-          <span className="font-extrabold text-xl tracking-tight text-white">
-            OTP<span className="text-emerald-400">Wallet</span>
-          </span>
-        </Link>
-        <h2 className="text-2xl font-bold text-white tracking-tight">Reset your password</h2>
-        <p className="mt-1 text-xs text-zinc-400">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center flex flex-col items-center">
+        <Logo size="lg" className="mb-4" />
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Reset your password</h2>
+        <p className="mt-1 text-xs font-medium text-slate-600">
           Enter your email address to receive recovery instructions
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="glass-panel-elevated p-6 sm:p-8 rounded-2xl border border-zinc-800 space-y-6">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-xl space-y-6">
           {isSubmitted ? (
             <div className="text-center py-4 space-y-4">
-              <div className="w-12 h-12 mx-auto rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <div className="w-12 h-12 mx-auto rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-900">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-white">Check your email</h3>
-              <p className="text-xs text-zinc-400">
+              <h3 className="text-base font-black text-slate-900">Check your email</h3>
+              <p className="text-xs text-slate-600 font-medium">
                 We have sent password reset instructions to{' '}
-                <span className="text-zinc-200 font-semibold">{email}</span>.
+                <span className="text-slate-900 font-bold">{email}</span>.
               </p>
               <Link
                 href="/auth/login"
-                className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-400 hover:text-emerald-300 pt-2"
+                className="inline-flex items-center gap-2 text-xs font-bold text-slate-900 hover:underline pt-2"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Return to sign in</span>
@@ -53,11 +47,11 @@ export default function ForgotPasswordPage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-zinc-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Email Address
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <Mail className="w-4 h-4" />
                   </div>
                   <input
@@ -66,23 +60,23 @@ export default function ForgotPasswordPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full pl-9 pr-3 py-2.5 bg-zinc-900 border border-zinc-700/80 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500 text-xs transition"
+                    className="w-full pl-10 pr-3 py-2.5 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0f172a] text-xs font-medium transition"
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                className="w-full py-3 px-4 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-md cursor-pointer"
               >
                 <span>Send Reset Link</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <div className="text-center">
+              <div className="text-center pt-2">
                 <Link
                   href="/auth/login"
-                  className="text-xs text-zinc-400 hover:text-zinc-200 inline-flex items-center gap-1.5"
+                  className="text-xs font-bold text-slate-600 hover:text-slate-900 inline-flex items-center gap-1.5"
                 >
                   <ArrowLeft className="w-3 h-3" />
                   <span>Back to login</span>

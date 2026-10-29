@@ -36,6 +36,10 @@ const allowedOrigins = [
   config.corsOrigin,
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'https://sim10.in',
+  'http://sim10.in',
+  'https://www.sim10.in',
+  'http://www.sim10.in',
   'https://ameridrugs.in',
   'http://ameridrugs.in',
   'https://www.ameridrugs.in',
@@ -49,6 +53,7 @@ app.use(
       if (
         !origin ||
         allowedOrigins.includes(origin) ||
+        origin.includes('sim10.in') ||
         origin.includes('ameridrugs.in') ||
         origin.includes('187.126.127.19') ||
         origin.includes('localhost')

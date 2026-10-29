@@ -26,7 +26,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({ name, className = 'w-5
   switch (name?.toLowerCase()) {
     case 'messagecircle':
     case 'whatsapp':
-      return <MessageCircle className={`${className} text-emerald-400`} />;
+      return <MessageCircle className={`${className} text-blue-600`} />;
     case 'send':
     case 'telegram':
       return <Send className={`${className} text-sky-400`} />;

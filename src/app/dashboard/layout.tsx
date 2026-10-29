@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { usePlatform } from '@/context/PlatformContext';
 import { RechargeModal } from '@/components/RechargeModal';
 import { OtpCountdownTimer } from '@/components/OtpCountdownTimer';
+import { Logo } from '@/components/Logo';
 import {
   Zap,
   LayoutDashboard,
@@ -23,6 +24,7 @@ import {
   User as UserIcon,
   Shield,
   ChevronUp,
+  HelpCircle,
 } from 'lucide-react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -50,67 +52,69 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const isAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin';
 
-  // Sidebar navigation sections (Support & Settings removed; Add Money removed)
+  // Sidebar navigation sections
   const navSections = [
     {
       title: 'CORE SERVICES',
       items: [
         {
-          label: 'Buy Number',
-          href: '/dashboard/buy-number',
-          icon: Zap,
-          activeBg: 'bg-blue-600 text-white',
-          iconColor: 'text-blue-400',
-          badge: 'Instant',
-          badgeStyle: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
-        },
-        {
           label: 'Overview',
           href: '/dashboard/overview',
           icon: LayoutDashboard,
-          activeBg: 'bg-zinc-800 text-white',
-          iconColor: 'text-zinc-400',
+        },
+        {
+          label: 'Buy Number',
+          href: '/dashboard/buy-number',
+          icon: Radio,
+          badge: 'Instant',
+          badgeStyle: 'bg-blue-100 text-blue-800 font-bold',
         },
         {
           label: 'Active Orders',
           href: '/dashboard/active-orders',
           icon: Clock,
-          activeBg: 'bg-amber-600 text-white',
-          iconColor: 'text-amber-400',
-          badge: activeOrder && activeOrder.status === 'WAITING_FOR_SMS' ? '1 Live' : null,
-          badgeStyle: 'bg-amber-500 text-black font-extrabold animate-pulse',
+          badge: activeOrder ? '1 Waiting' : undefined,
+          badgeStyle: 'bg-amber-100 text-amber-800 font-bold animate-pulse',
         },
         {
-          label: 'Activations',
+          label: 'Order History',
           href: '/dashboard/activations',
           icon: History,
-          activeBg: 'bg-teal-600 text-white',
-          iconColor: 'text-teal-400',
         },
       ],
     },
     {
-      title: 'WALLET & BILLING',
+      title: 'FINANCES & BILLING',
       items: [
         {
           label: 'Wallet Overview',
           href: '/dashboard/wallet',
           icon: Wallet,
-          activeBg: 'bg-emerald-600 text-white',
-          iconColor: 'text-emerald-400',
         },
         {
           label: 'Financial Ledger',
           href: '/dashboard/wallet/transactions',
           icon: FileText,
-          activeBg: 'bg-purple-600 text-white',
-          iconColor: 'text-purple-400',
+        },
+      ],
+    },
+    {
+      title: 'HELP & ACCOUNT',
+      items: [
+        {
+          label: 'Support Desk',
+          href: '/dashboard/support',
+          icon: HelpCircle,
+        },
+        {
+          label: 'Settings',
+          href: '/dashboard/settings',
+          icon: Settings,
         },
       ],
     },
   ];
 
-  // Handler when clicking Add Funds button: opens recharge modal & routes to Wallet Overview
   const handleAddFundsClick = () => {
     setIsRechargeOpen(true);
     if (!pathname?.startsWith('/dashboard/wallet')) {
@@ -118,33 +122,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   };
 
-  // Reusable Left Sidebar Content
+  // Reusable Left Sidebar Content (Clean Light Mode)
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-zinc-950 text-zinc-100 select-none">
+    <div className="flex flex-col h-full bg-white text-slate-800 select-none">
       {/* 1. Sidebar Brand Header */}
-      <div className="p-5 border-b border-zinc-800/80 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md group-hover:bg-blue-500 transition">
-            <Radio className="w-5 h-5 text-white animate-pulse" />
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight text-white">
-                OTP<span className="text-emerald-400">Wallet</span>
-              </span>
-              <span className="px-1.5 py-0.2 text-[9px] font-bold uppercase rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                Live
-              </span>
-            </div>
-            <span className="text-[10px] text-zinc-400 -mt-0.5">Customer Dashboard</span>
-          </div>
-        </Link>
+      <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+        <Logo href="/" size="sm" />
 
         {/* Mobile Close Button */}
         <button
           type="button"
           onClick={() => setIsMobileSidebarOpen(false)}
-          className="lg:hidden p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+          className="lg:hidden p-1.5 rounded-xl text-slate-400 hover:text-slate-850 hover:bg-slate-100 transition cursor-pointer"
           title="Close Menu"
         >
           <X className="w-5 h-5" />
@@ -152,27 +141,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* 2. Embedded Wallet Card in Sidebar */}
-      <div className="p-3 mx-3 mt-4 mb-2 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-sm space-y-2.5">
+      <div className="p-3.5 mx-3 mt-4 mb-2 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs space-y-2.5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
-            <Wallet className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-1.5 text-xs text-slate-700 font-bold">
+            <Wallet className="w-3.5 h-3.5 text-slate-900" />
             <span>Available Balance</span>
           </div>
-          <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
+          <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-700">
             INR
           </span>
         </div>
 
         <div className="flex items-baseline justify-between">
           {!isLoaded ? (
-            <div className="h-6 w-24 bg-zinc-800 animate-pulse rounded my-0.5" />
+            <div className="h-6 w-24 bg-slate-200 animate-pulse rounded my-0.5" />
           ) : (
             <>
-              <span className="text-xl font-extrabold text-white font-mono tracking-tight">
+              <span className="text-xl font-black text-slate-900 font-mono tracking-tight">
                 ₹{wallet.availableBalance.toFixed(2)}
               </span>
               {wallet.heldBalance > 0 && (
-                <span className="text-[11px] font-mono text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                <span className="text-[11px] font-mono font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
                   ₹{wallet.heldBalance.toFixed(2)} held
                 </span>
               )}
@@ -183,9 +172,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <button
           type="button"
           onClick={handleAddFundsClick}
-          className="w-full py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/15 cursor-pointer"
+          className="w-full py-2.5 px-3 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-sm transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[3]" />
+          <Plus className="w-4 h-4 stroke-[3]" />
           <span>Add Funds</span>
         </button>
       </div>
@@ -194,34 +183,59 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="flex-1 overflow-y-auto px-3 py-2 space-y-5 no-scrollbar">
         {navSections.map((section) => (
           <div key={section.title} className="space-y-1">
-            <span className="px-3 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
+            <span className="px-3 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider block">
               {section.title}
             </span>
             <div className="space-y-0.5">
               {section.items.map((item) => {
                 const Icon = item.icon;
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== '/dashboard' && pathname?.startsWith(item.href));
+                const isActive = (() => {
+                  if (pathname === item.href) return true;
+                  if (item.href === '/dashboard/buy-number') {
+                    if (pathname === '/dashboard' || pathname === '/dashboard/buy-number') return true;
+                  }
+                  if (item.href === '/dashboard/wallet') {
+                    return (
+                      Boolean(pathname?.startsWith('/dashboard/wallet')) &&
+                      !pathname?.startsWith('/dashboard/wallet/transactions')
+                    );
+                  }
+                  if (item.href !== '/dashboard' && pathname?.startsWith(item.href + '/')) {
+                    return true;
+                  }
+                  return false;
+                })();
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileSidebarOpen(false)}
-                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition ${
+                    className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all ${
                       isActive
-                        ? `${item.activeBg} shadow-md`
-                        : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+                        ? 'bg-[#0f172a] text-white font-bold shadow-sm'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-semibold'
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : item.iconColor}`} />
+                      <Icon
+                        className={`w-4 h-4 transition-colors ${
+                          isActive
+                            ? 'text-white stroke-[2.3]'
+                            : 'text-slate-400 group-hover:text-slate-700'
+                        }`}
+                      />
                       <span>{item.label}</span>
                     </div>
 
                     {item.badge && (
-                      <span className={`px-1.5 py-0.5 rounded-md text-[10px] ${item.badgeStyle}`}>
+                      <span
+                        className={`px-1.5 py-0.5 rounded-md text-[10px] ${
+                          isActive
+                            ? 'bg-white/20 text-white font-bold'
+                            : item.badgeStyle
+                        }`}
+                      >
                         {item.badge}
                       </span>
                     )}
@@ -233,69 +247,79 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         ))}
       </div>
 
-      {/* 4. Sidebar Bottom User Section with Interactive Settings & Logout Dropdown */}
-      <div className="p-3 border-t border-zinc-800/80 bg-zinc-950/80 relative">
+      {/* 4. Sidebar Bottom User Section */}
+      <div className="p-3 border-t border-slate-200 bg-white relative">
         {/* Dropdown Menu (Opens Upwards) */}
         {isBottomUserMenuOpen && (
-          <div className="absolute bottom-16 left-3 right-3 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-1">
-            <div className="px-3 py-2 border-b border-zinc-800/80">
-              <span className="text-xs font-bold text-white block truncate">
-                {currentUser.name}
-              </span>
-              <span className="text-[10px] text-zinc-400 block truncate">
-                {currentUser.email}
-              </span>
-            </div>
-
+          <div className="absolute bottom-16 left-3 right-3 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-1">
             <Link
               href="/dashboard/settings"
-              onClick={() => {
-                setIsBottomUserMenuOpen(false);
-                setIsMobileSidebarOpen(false);
-              }}
-              className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-xl transition"
+              onClick={() => setIsBottomUserMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition"
             >
-              <Settings className="w-4 h-4 text-zinc-400" />
-              <span>Account Settings</span>
+              <Settings className="w-4 h-4 text-slate-500" />
+              <span>Settings</span>
             </Link>
 
-            <button
-              type="button"
-              onClick={() => {
-                setIsBottomUserMenuOpen(false);
-                setIsMobileSidebarOpen(false);
-                logout();
-              }}
-              className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition cursor-pointer text-left"
+            <Link
+              href="/dashboard/support"
+              onClick={() => setIsBottomUserMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition"
             >
-              <LogOut className="w-4 h-4" />
-              <span>Sign Out</span>
-            </button>
+              <FileText className="w-4 h-4 text-teal-600" />
+              <span>Support Desk</span>
+            </Link>
+
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setIsBottomUserMenuOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-purple-700 hover:bg-purple-50 rounded-xl transition"
+              >
+                <Shield className="w-4 h-4 text-purple-600" />
+                <span>Admin Console</span>
+              </Link>
+            )}
+
+            <div className="pt-1 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  setIsBottomUserMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer text-left"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
         )}
 
-        {/* User Card Trigger */}
+        {/* User Pill Button */}
         <button
           type="button"
           onClick={() => setIsBottomUserMenuOpen(!isBottomUserMenuOpen)}
-          className="w-full p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800/90 border border-zinc-800/80 flex items-center justify-between gap-2 text-left transition cursor-pointer"
+          className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 transition cursor-pointer"
         >
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-white text-xs shrink-0">
+          <div className="flex items-center gap-2.5 overflow-hidden">
+            <div
+              className={`w-8 h-8 rounded-lg ${
+                isAdmin ? 'bg-purple-600' : 'bg-blue-600'
+              } flex items-center justify-center font-bold text-white text-xs shrink-0 shadow-xs`}
+            >
               {currentUser.name ? currentUser.name.charAt(0) : 'U'}
             </div>
-            <div className="min-w-0">
-              <span className="font-bold text-xs text-white block truncate">
-                {currentUser.name}
+            <div className="flex flex-col text-left overflow-hidden">
+              <span className="text-xs font-bold text-slate-800 truncate">
+                {currentUser.name || 'User'}
               </span>
-              <span className="text-[10px] text-zinc-400 block truncate">
-                {currentUser.email}
-              </span>
+              <span className="text-[10px] text-slate-500 truncate">{currentUser.email}</span>
             </div>
           </div>
-
           <ChevronUp
-            className={`w-4 h-4 text-zinc-400 transition-transform ${
+            className={`w-4 h-4 text-slate-400 transition-transform ${
               isBottomUserMenuOpen ? 'rotate-180' : ''
             }`}
           />
@@ -305,91 +329,63 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   return (
-    <div className="min-h-screen bg-[#080b13] text-zinc-100 flex">
-      {/* ========================================================================= */}
+    <div className="min-h-screen bg-white text-slate-900 flex">
       {/* DESKTOP FIXED LEFT SIDEBAR */}
-      {/* ========================================================================= */}
-      <aside className="hidden lg:flex w-64 h-screen sticky top-0 flex-col shrink-0 border-r border-zinc-800/80 z-40 bg-zinc-950">
+      <aside className="hidden lg:flex w-64 h-screen sticky top-0 flex-col shrink-0 border-r border-slate-200 z-40 bg-white">
         {sidebarContent}
       </aside>
 
-      {/* ========================================================================= */}
-      {/* MOBILE DRAWER SIDEBAR WITH LEFT-TO-RIGHT SLIDE ANIMATION */}
-      {/* ========================================================================= */}
+      {/* MOBILE DRAWER SIDEBAR */}
       {isMobileSidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
-          {/* Backdrop with fade-in */}
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
             onClick={() => setIsMobileSidebarOpen(false)}
           />
-
-          {/* Drawer Panel with hardware-accelerated slide-in-from-left */}
-          <div className="relative w-72 max-w-[85vw] h-full z-10 shadow-2xl flex flex-col animate-slide-in-left">
+          <div className="relative w-72 max-w-[85vw] h-full z-10 shadow-2xl flex flex-col animate-slide-in-left bg-white">
             {sidebarContent}
           </div>
         </div>
       )}
 
-      {/* ========================================================================= */}
       {/* MAIN RIGHT CONTAINER */}
-      {/* ========================================================================= */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-30 h-16 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800/80 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-          {/* Left: Menu Icon + Logo (Breadcrumb Removed) */}
+        <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 shadow-xs">
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Replaced Menu Icon with PanelLeft */}
             <button
               type="button"
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition cursor-pointer"
+              className="lg:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer"
               title="Open Navigation Menu"
             >
-              <PanelLeft className="w-5 h-5 text-emerald-400" />
+              <PanelLeft className="w-5 h-5 text-slate-900" />
             </button>
-
-            {/* Brand Logo added in left side after menu icon */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md group-hover:bg-blue-500 transition">
-                <Radio className="w-4 h-4 text-white animate-pulse" />
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-sm sm:text-base tracking-tight text-white">
-                    OTP<span className="text-emerald-400">Wallet</span>
-                  </span>
-                  <span className="px-1.5 py-0.2 text-[9px] font-bold uppercase rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                    Live
-                  </span>
-                </div>
-              </div>
-            </Link>
+            <Logo href="/" size="sm" />
           </div>
 
-          {/* Right: Quick Controls (Wallet Pill Hidden on Mobile) */}
           <div className="flex items-center gap-3">
-            {/* Quick "Get Number" CTA */}
+            {/* Quick "Get Number" CTA (Larger text) */}
             <Link
               href="/dashboard/buy-number"
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm transition"
+              className="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-sm shadow-xs transition"
             >
-              <Zap className="w-3.5 h-3.5 fill-white" />
+              <Zap className="w-4 h-4 fill-white" />
               <span>Get Number</span>
             </Link>
 
-            {/* Top Bar Wallet Pill - Visible on Mobile and Desktop */}
-            <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-xl p-1 shadow-sm">
+            {/* Top Bar Wallet Pill */}
+            <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 shadow-xs">
               <Link
                 href="/dashboard/wallet"
-                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1 text-xs hover:bg-zinc-800 rounded-lg transition"
+                className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 text-xs hover:bg-white rounded-lg transition"
               >
-                <Wallet className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <Wallet className="w-4 h-4 text-slate-900 shrink-0" />
                 <div className="flex flex-col text-left">
-                  <span className="text-[9px] sm:text-[10px] text-zinc-400 leading-none">Available</span>
-                  <span className="font-bold text-zinc-100 font-mono text-xs">
+                  <span className="text-[10px] text-slate-500 font-semibold leading-none">Available</span>
+                  <span className="font-bold text-slate-900 font-mono text-sm">
                     {!isLoaded ? (
-                      <span className="inline-block w-12 h-3 bg-zinc-800 animate-pulse rounded my-0.5" />
+                      <span className="inline-block w-12 h-3 bg-slate-200 animate-pulse rounded my-0.5" />
                     ) : (
                       `₹${wallet.availableBalance.toFixed(2)}`
                     )}
@@ -400,39 +396,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <button
                 type="button"
                 onClick={handleAddFundsClick}
-                className="ml-1 p-1 sm:p-1.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-lg transition flex items-center justify-center cursor-pointer font-bold shrink-0"
+                className="ml-1 p-2 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-lg transition flex items-center justify-center cursor-pointer font-bold shrink-0 shadow-xs"
                 title="Add Money"
               >
-                <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-              </button>
-            </div>
-
-            {/* Header User Dropdown - HIDDEN ON MOBILE */}
-            <div className="hidden sm:block relative">
-              <button
-                type="button"
-                onClick={() => setIsBottomUserMenuOpen(!isBottomUserMenuOpen)}
-                className="flex items-center gap-2 p-1.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs transition cursor-pointer"
-                title="Account Menu"
-              >
-                <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-white text-xs">
-                  {currentUser.name ? currentUser.name.charAt(0) : 'U'}
-                </div>
+                <Plus className="w-4 h-4 stroke-[2.5]" />
               </button>
             </div>
           </div>
         </header>
 
-        {/* Floating Active Order Notice Banner (if waiting for SMS) */}
+        {/* Floating Active Order Notice Banner */}
         {activeOrder && activeOrder.status === 'WAITING_FOR_SMS' && (
-          <div className="bg-zinc-900 border-b-2 border-amber-500/60 px-4 sm:px-6 lg:px-8 py-2.5">
+          <div className="bg-amber-50 border-b border-amber-200 px-4 sm:px-6 lg:px-8 py-3 text-slate-900">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-3">
-                <span className="flex h-2.5 w-2.5 rounded-full bg-amber-400 animate-ping" />
+                <span className="flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-ping" />
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-white">Active Order:</span>
-                  <span className="text-amber-400 font-bold">{activeOrder.serviceName}</span>
-                  <span className="text-zinc-400">
+                  <span className="font-bold text-slate-800">Active Order:</span>
+                  <span className="text-amber-800 font-bold">{activeOrder.serviceName}</span>
+                  <span className="text-slate-600 font-medium">
                     ({activeOrder.countryFlag} {activeOrder.phoneNumber})
                   </span>
                 </div>
@@ -440,7 +422,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-zinc-400">Timer:</span>
+                  <span className="text-slate-600 font-medium">Timer:</span>
                   <OtpCountdownTimer
                     expiresAt={activeOrder.websiteExpiresAt}
                     className="scale-90"
@@ -449,7 +431,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                 <Link
                   href="/dashboard/buy-number"
-                  className="px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs transition flex items-center gap-1 shadow-sm"
+                  className="px-3.5 py-1.5 rounded-lg bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold text-xs transition flex items-center gap-1 shadow-xs"
                 >
                   <span>View OTP Box</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -465,10 +447,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-900 px-6 py-4 text-xs text-zinc-400 flex flex-col sm:flex-row items-center justify-between gap-2 mt-auto">
-          <span>© {new Date().getFullYear()} OTPWallet Platform. All rights reserved.</span>
+        <footer className="border-t border-slate-200 px-6 py-4 text-xs font-medium text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2 mt-auto bg-white">
+          <span>© {new Date().getFullYear()} SIM10 Platform. All rights reserved.</span>
           <div className="flex items-center gap-4">
-            <Link href="/" className="hover:text-zinc-200 transition">
+            <Link href="/" className="hover:text-slate-800 transition">
               Home Portal
             </Link>
           </div>
