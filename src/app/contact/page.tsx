@@ -87,47 +87,57 @@ export default function ContactPage() {
 
               <div className="space-y-4 text-xs text-slate-700">
                 {/* Email */}
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="p-2 rounded-lg bg-blue-100 text-blue-700 shrink-0">
+                <div className="flex items-start gap-3.5 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="p-2.5 rounded-xl bg-blue-100 text-blue-700 shrink-0 mt-0.5">
                     <Mail className="w-4 h-4" />
                   </div>
-                  <div>
-                    <span className="text-slate-500 block text-[11px] font-semibold">Official Support Email</span>
+                  <div className="space-y-1 flex-1">
+                    <span className="text-slate-500 block text-[11px] font-bold uppercase tracking-wider">
+                      Official Support Email
+                    </span>
                     <a
                       href="mailto:support@sim10.in"
-                      className="font-bold text-slate-900 hover:text-blue-700 transition font-mono text-sm"
+                      className="font-bold text-slate-900 hover:text-blue-700 transition font-mono text-sm block"
                     >
                       support@sim10.in
                     </a>
-                    <p className="text-[10px] text-slate-500 mt-0.5 font-medium">Average response: &lt; 12 hours</p>
+                    <p className="text-xs text-slate-500 font-medium pt-0.5">
+                      Average response: &lt; 12 hours
+                    </p>
                   </div>
                 </div>
 
                 {/* Phone */}
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="p-2 rounded-lg bg-blue-100 text-blue-700 shrink-0">
+                <div className="flex items-start gap-3.5 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="p-2.5 rounded-xl bg-blue-100 text-blue-700 shrink-0 mt-0.5">
                     <Phone className="w-4 h-4" />
                   </div>
-                  <div>
-                    <span className="text-slate-500 block text-[11px] font-semibold">Customer Support Helpline</span>
+                  <div className="space-y-1 flex-1">
+                    <span className="text-slate-500 block text-[11px] font-bold uppercase tracking-wider">
+                      Customer Support Helpline
+                    </span>
                     <a
                       href="tel:+919106284931"
-                      className="font-bold text-slate-900 hover:text-blue-700 transition font-mono text-sm"
+                      className="font-bold text-slate-900 hover:text-blue-700 transition font-mono text-sm block"
                     >
                       +91 91062 84931
                     </a>
-                    <p className="text-[10px] text-slate-500 mt-0.5 font-medium">Voice Support: Mon–Sat, 9AM–7PM</p>
+                    <p className="text-xs text-slate-500 font-medium pt-0.5">
+                      Voice Support: Mon–Sat, 9:00 AM – 7:00 PM IST
+                    </p>
                   </div>
                 </div>
 
                 {/* Operating Address */}
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="p-2 rounded-lg bg-purple-100 text-purple-700 shrink-0">
+                <div className="flex items-start gap-3.5 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="p-2.5 rounded-xl bg-purple-100 text-purple-700 shrink-0 mt-0.5">
                     <MapPin className="w-4 h-4" />
                   </div>
-                  <div>
-                    <span className="text-slate-500 block text-[11px] font-semibold">Registered & Operating Office</span>
-                    <p className="font-semibold text-slate-800 leading-relaxed text-xs">
+                  <div className="space-y-1 flex-1">
+                    <span className="text-slate-500 block text-[11px] font-bold uppercase tracking-wider">
+                      Registered & Operating Office
+                    </span>
+                    <p className="font-semibold text-slate-800 leading-relaxed text-xs sm:text-sm pt-0.5">
                       SIM10 Platform, 2nd Floor, Patel Chambers,
                       <br />
                       Near Station Road, Surat,
@@ -137,31 +147,37 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Hours */}
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="p-2 rounded-lg bg-amber-100 text-amber-700 shrink-0">
+                {/* Hours - Spaced Out & Clean */}
+                <div className="flex items-start gap-3.5 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="p-2.5 rounded-xl bg-amber-100 text-amber-700 shrink-0 mt-0.5">
                     <Clock className="w-4 h-4" />
                   </div>
-                  <div>
-                    <span className="text-slate-500 block text-[11px] font-semibold">Operating Working Hours</span>
-                    <p className="font-bold text-slate-900">
+                  <div className="space-y-1.5 flex-1">
+                    <span className="text-slate-500 block text-[11px] font-bold uppercase tracking-wider">
+                      Operating Working Hours
+                    </span>
+                    <p className="font-bold text-slate-900 text-xs sm:text-sm leading-normal">
                       Monday to Saturday: 9:00 AM – 7:00 PM IST
                     </p>
-                    <p className="text-slate-500 text-[11px] font-medium">Sunday: 10:00 AM – 2:00 PM IST</p>
-                    <p className="text-emerald-700 text-[10px] font-bold mt-0.5">
-                      Automated OTP Routing & Wallet System: 24/7/365
+                    <p className="text-slate-600 text-xs font-medium leading-normal">
+                      Sunday: 10:00 AM – 2:00 PM IST
                     </p>
+                    <div className="pt-1.5 border-t border-slate-200/70">
+                      <p className="text-emerald-700 text-xs font-bold leading-normal">
+                        Automated OTP Routing & Wallet System: 24/7/365
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Trust Badge */}
-              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-slate-700 space-y-1">
-                <div className="flex items-center gap-1.5 font-bold text-emerald-800">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <div className="p-4.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-slate-700 space-y-2 mt-4">
+                <div className="flex items-center gap-2 font-bold text-emerald-800 text-xs sm:text-sm">
+                  <ShieldCheck className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
                   <span>Verified Razorpay Merchant</span>
                 </div>
-                <p className="text-[11px] text-slate-600 font-medium">
+                <p className="text-xs text-slate-600 font-medium leading-relaxed">
                   Payments are authenticated securely via Razorpay Payment Gateway with RBI-compliant
                   multi-factor security.
                 </p>

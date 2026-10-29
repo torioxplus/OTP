@@ -142,7 +142,7 @@ export default function PrivacyPage() {
                 is handled entirely by our authorized, licensed payment gateway partner:{' '}
                 <strong className="text-slate-900">Razorpay Software Private Limited</strong>.
               </p>
-              <ul className="list-disc list-inside space-y-1.5 text-xs text-slate-600 pl-2">
+              <ul className="list-disc pl-6 mt-4 space-y-3 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
                 <li>
                   Your sensitive payment credentials (such as Credit/Debit card numbers, CVVs, UPI
                   PINs, and net banking passwords) are entered directly into Razorpay&apos;s
@@ -162,13 +162,13 @@ export default function PrivacyPage() {
 
           {/* Section 4 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold shrink-0">
                 4
               </span>
-              How We Use Your Information
+              <span>How We Use Your Information</span>
             </h2>
-            <ul className="list-disc list-inside space-y-2 text-slate-600 pl-2">
+            <ul className="list-disc pl-6 space-y-3 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
               <li>To provide, maintain, and dynamically route temporary SMS verification numbers.</li>
               <li>To maintain your wallet ledger, account balance, and financial transaction logs.</li>
               <li>To notify you of important service alerts, security notices, and receipt logs.</li>
@@ -179,33 +179,35 @@ export default function PrivacyPage() {
 
           {/* Section 5 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold shrink-0">
                 5
               </span>
-              Data Sharing & Third-Party Disclosure
+              <span>Data Sharing & Third-Party Disclosure</span>
             </h2>
-            <p className="text-slate-600">
-              <strong>We do NOT sell, rent, or trade your personal data</strong> to advertisers or
-              unaffiliated third parties.
-            </p>
-            <p className="text-slate-600 mt-2">
-              We share data only with:
-            </p>
-            <ul className="list-disc list-inside space-y-1.5 text-xs text-slate-600 mt-2 pl-2">
-              <li>
-                <strong>Payment Aggregators (Razorpay):</strong> Strictly to authenticate and settle
-                wallet recharges.
-              </li>
-              <li>
-                <strong>Database & Infrastructure Providers:</strong> High-security cloud hosts
-                subject to strict confidentiality agreements.
-              </li>
-              <li>
-                <strong>Law Enforcement / Regulatory Authorities:</strong> Exclusively when mandated
-                by a valid judicial order or applicable Indian laws.
-              </li>
-            </ul>
+            <div className="space-y-3 text-slate-600 text-sm leading-relaxed">
+              <p>
+                <strong className="text-slate-900">We do NOT sell, rent, or trade your personal data</strong> to advertisers or
+                unaffiliated third parties.
+              </p>
+              <p className="mt-2">
+                We share data only with:
+              </p>
+              <ul className="list-disc pl-6 space-y-3 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
+                <li>
+                  <strong className="text-slate-900 font-bold">Payment Aggregators (Razorpay):</strong> Strictly to authenticate and settle
+                  wallet recharges.
+                </li>
+                <li>
+                  <strong className="text-slate-900 font-bold">Database & Infrastructure Providers:</strong> High-security cloud hosts
+                  subject to strict confidentiality agreements.
+                </li>
+                <li>
+                  <strong className="text-slate-900 font-bold">Law Enforcement / Regulatory Authorities:</strong> Exclusively when mandated
+                  by a valid judicial order or applicable Indian laws.
+                </li>
+              </ul>
+            </div>
           </section>
 
           {/* Section 6 */}

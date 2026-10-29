@@ -84,7 +84,7 @@ export default function TermsPage() {
               routing services designed for software testing, quality assurance (QA), digital app
               demonstrations, and user privacy protection.
             </p>
-            <ul className="list-disc list-inside mt-3 space-y-1.5 text-slate-600 pl-2">
+            <ul className="list-disc pl-6 mt-4 space-y-3 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
               <li>
                 Virtual numbers are provided on a temporary, single-use activation basis.
               </li>
