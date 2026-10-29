@@ -70,57 +70,57 @@ export default function PrivacyPage() {
 
           {/* Section 2 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold shrink-0">
                 2
               </span>
-              Information We Collect
+              <span>Information We Collect</span>
             </h2>
-            <p className="text-slate-600 mb-4">
+            <p className="text-slate-600 mb-5 leading-relaxed">
               We collect only the minimum necessary information required to deliver high-quality,
               secure verification services:
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-slate-900">
-                  <UserCheck className="w-4 h-4 text-emerald-600" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                  <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Account & Profile Data</span>
                 </div>
-                <p className="text-slate-600">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   Full name, email address, hashed passwords, and contact preferences provided upon
                   registration.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-slate-900">
-                  <Database className="w-4 h-4 text-blue-600" />
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                  <Database className="w-4 h-4 text-blue-600 shrink-0" />
                   <span>Order & Verification History</span>
                 </div>
-                <p className="text-slate-600">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   Temporary numbers requested, timestamp of activation, service selected (e.g.
                   Telegram, Meesho), and verification SMS received.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-slate-900">
-                  <Server className="w-4 h-4 text-purple-600" />
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                  <Server className="w-4 h-4 text-purple-600 shrink-0" />
                   <span>Technical & Log Data</span>
                 </div>
-                <p className="text-slate-600">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   IP address, browser type, operating system, and access timestamps to prevent
                   abuse, fraud, and unauthorized access.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-slate-900">
-                  <Lock className="w-4 h-4 text-amber-600" />
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                  <Lock className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>Payment Metadata</span>
                 </div>
-                <p className="text-slate-600">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   Razorpay Order ID, Payment ID, amount, currency (INR), and completion timestamp.
                 </p>
               </div>
@@ -129,20 +129,20 @@ export default function PrivacyPage() {
 
           {/* Section 3 */}
           <section className="bg-emerald-50/50 border border-emerald-200 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold shrink-0">
                 3
               </span>
-              Security of Payment Information (Razorpay Integration)
+              <span>Security of Payment Information (Razorpay Integration)</span>
             </h2>
-            <div className="space-y-3 text-slate-700">
+            <div className="space-y-4 text-slate-700 leading-relaxed">
               <p>
-                <strong>We NEVER store sensitive financial data.</strong> All payment processing for
+                <strong className="text-slate-900 font-bold">We NEVER store sensitive financial data.</strong> All payment processing for
                 wallet top-ups on <span className="font-mono text-emerald-700 font-bold">sim10.in</span>{' '}
                 is handled entirely by our authorized, licensed payment gateway partner:{' '}
-                <strong className="text-slate-900">Razorpay Software Private Limited</strong>.
+                <strong className="text-slate-900 font-bold">Razorpay Software Private Limited</strong>.
               </p>
-              <ul className="list-disc pl-6 mt-4 space-y-3 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
+              <ul className="list-disc pl-6 space-y-3.5 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
                 <li>
                   Your sensitive payment credentials (such as Credit/Debit card numbers, CVVs, UPI
                   PINs, and net banking passwords) are entered directly into Razorpay&apos;s
@@ -162,13 +162,13 @@ export default function PrivacyPage() {
 
           {/* Section 4 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-3 mb-4">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
               <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold shrink-0">
                 4
               </span>
               <span>How We Use Your Information</span>
             </h2>
-            <ul className="list-disc pl-6 space-y-3 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
+            <ul className="list-disc pl-6 space-y-3.5 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
               <li>To provide, maintain, and dynamically route temporary SMS verification numbers.</li>
               <li>To maintain your wallet ledger, account balance, and financial transaction logs.</li>
               <li>To notify you of important service alerts, security notices, and receipt logs.</li>
@@ -179,21 +179,21 @@ export default function PrivacyPage() {
 
           {/* Section 5 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-3 mb-4">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
               <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold shrink-0">
                 5
               </span>
               <span>Data Sharing & Third-Party Disclosure</span>
             </h2>
-            <div className="space-y-3 text-slate-600 text-sm leading-relaxed">
+            <div className="space-y-4 text-slate-600 text-sm leading-relaxed">
               <p>
-                <strong className="text-slate-900">We do NOT sell, rent, or trade your personal data</strong> to advertisers or
+                <strong className="text-slate-900 font-bold">We do NOT sell, rent, or trade your personal data</strong> to advertisers or
                 unaffiliated third parties.
               </p>
-              <p className="mt-2">
+              <p>
                 We share data only with:
               </p>
-              <ul className="list-disc pl-6 space-y-3 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
+              <ul className="list-disc pl-6 space-y-3.5 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
                 <li>
                   <strong className="text-slate-900 font-bold">Payment Aggregators (Razorpay):</strong> Strictly to authenticate and settle
                   wallet recharges.
@@ -212,29 +212,29 @@ export default function PrivacyPage() {
 
           {/* Section 6 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-xs font-mono font-bold shrink-0">
                 6
               </span>
-              Grievance Officer & Support Contact
+              <span>Grievance Officer & Support Contact</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-600 leading-relaxed mb-4">
               In accordance with the Information Technology Act, 2000 and the Rules made thereunder,
               the details of the Grievance Redressal Desk are provided below:
             </p>
-            <div className="mt-3 text-xs text-slate-700 space-y-1.5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div className="text-xs sm:text-sm text-slate-700 space-y-2.5 bg-slate-50 p-5 rounded-2xl border border-slate-200 leading-relaxed">
               <p>
-                <strong className="text-slate-900">Designation:</strong> Grievance Officer
+                <strong className="text-slate-900 font-bold">Designation:</strong> Grievance Officer
               </p>
               <p>
-                <strong className="text-slate-900">Platform:</strong> SIM10
+                <strong className="text-slate-900 font-bold">Platform:</strong> SIM10
               </p>
               <p>
-                <strong className="text-slate-900">Postal Address:</strong> SIM10, 2nd Floor, Patel
+                <strong className="text-slate-900 font-bold">Postal Address:</strong> SIM10, 2nd Floor, Patel
                 Chambers, Near Station Road, Surat, Gujarat 395003, India
               </p>
               <p>
-                <strong className="text-slate-900">Official Support Email:</strong>{' '}
+                <strong className="text-slate-900 font-bold">Official Support Email:</strong>{' '}
                 <a
                   href="mailto:support@sim10.in"
                   className="text-emerald-700 underline font-mono font-bold"
@@ -243,7 +243,7 @@ export default function PrivacyPage() {
                 </a>
               </p>
               <p>
-                <strong className="text-slate-900">Response Time:</strong> Acknowledgment within 24
+                <strong className="text-slate-900 font-bold">Response Time:</strong> Acknowledgment within 24
                 hours; resolution within 7 working days.
               </p>
             </div>
