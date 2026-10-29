@@ -433,61 +433,66 @@ export default function BuyNumberPage() {
             ))}
           </div>
 
-          {/* Service Cards Grid - Sleek Compact Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-2.5 sm:gap-3">
+          {/* Service Cards Grid - 2-Row Stacked Layout (Price NEVER cuts off on any screen) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
             {filteredServices.map((service) => {
               const isSelected = selectedServiceId === service.id;
               return (
                 <div
                   key={service.id}
                   onClick={() => setSelectedServiceId(service.id)}
-                  className={`group relative p-3 sm:p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex items-center justify-between gap-3 ${
+                  className={`group relative p-3.5 rounded-xl border-2 transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 ${
                     isSelected
-                      ? 'bg-slate-50/90 border-2 border-[#0f172a] shadow-xs ring-1 ring-[#0f172a]'
+                      ? 'bg-slate-50 border-[#0f172a] shadow-sm ring-1 ring-[#0f172a]'
                       : 'bg-white border-slate-200 hover:border-slate-400 hover:shadow-xs'
                   }`}
                 >
+                  {/* TOP ROW: Icon + Service Name (Full Width - Zero chance of price cut) */}
                   <div className="flex items-center gap-2.5 min-w-0">
                     <div
                       className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                         isSelected
-                          ? 'bg-slate-200/80 border border-slate-300'
-                          : 'bg-slate-100 border border-slate-200/80 group-hover:bg-slate-50'
+                          ? 'bg-slate-200 border border-slate-300'
+                          : 'bg-slate-100 border border-slate-200 group-hover:bg-slate-50'
                       }`}
                     >
                       <ServiceIcon name={service.iconName} className="w-5 h-5" />
                     </div>
-                    <div className="min-w-0">
+
+                    <div className="min-w-0 flex-1">
                       <h4 className="font-bold text-xs sm:text-[13px] text-slate-900 truncate tracking-tight">
                         {service.name}
                       </h4>
-                      <div className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5 mt-0.5">
-                        <span>~{service.avgSpeedSeconds}s</span>
-                        <span>•</span>
-                        <span className="text-emerald-700 font-bold">{service.successRate}%</span>
-                      </div>
+                      <span className="text-[10px] text-slate-500 capitalize block font-medium">
+                        {service.category}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span
-                      className={`font-mono font-black text-xs px-2.5 py-1 rounded-lg transition-colors ${
-                        isSelected
-                          ? 'bg-[#0f172a] text-white'
-                          : 'bg-slate-100 text-slate-900 group-hover:bg-slate-200'
-                      }`}
-                    >
-                      ₹{service.sellingPrice.toFixed(0)}
-                    </span>
+                  {/* BOTTOM ROW: Stats on Left, Price & Check on Right (Dedicated row) */}
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                    <div className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5 shrink-0">
+                      <span>~{service.avgSpeedSeconds}s</span>
+                      <span>•</span>
+                      <span className="text-emerald-700 font-bold">{service.successRate}%</span>
+                    </div>
 
-                    <div
-                      className={`w-4 h-4 rounded-full flex items-center justify-center transition-all ${
-                        isSelected
-                          ? 'bg-[#0f172a] text-white'
-                          : 'border border-slate-300 group-hover:border-slate-400'
-                      }`}
-                    >
-                      {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span
+                        className={`font-mono font-black text-xs sm:text-sm px-2.5 py-1 rounded-lg transition-colors ${
+                          isSelected
+                            ? 'bg-[#0f172a] text-white shadow-xs'
+                            : 'bg-slate-100 text-slate-900 group-hover:bg-slate-200'
+                        }`}
+                      >
+                        ₹{service.sellingPrice.toFixed(0)}
+                      </span>
+
+                      {isSelected && (
+                        <div className="w-5 h-5 rounded-full bg-[#0f172a] text-white flex items-center justify-center shrink-0">
+                          <Check className="w-3 h-3 stroke-[3]" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

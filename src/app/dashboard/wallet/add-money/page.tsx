@@ -173,7 +173,7 @@ export default function AddMoneyPage() {
 
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 w-full">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Add Money to Wallet</h1>
         <p className="text-xs text-slate-600 mt-1">

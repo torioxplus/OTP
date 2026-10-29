@@ -46,7 +46,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-4xl">
+    <div className="space-y-8 w-full">
       <div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">Account Settings</h1>
         <p className="text-sm text-slate-600 mt-1 font-medium">

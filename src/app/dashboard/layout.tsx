@@ -180,13 +180,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* 3. Navigation Menu Sections */}
-      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-5 no-scrollbar">
+      <div className="flex-1 overflow-y-auto px-3.5 py-2 space-y-5 no-scrollbar">
         {navSections.map((section) => (
-          <div key={section.title} className="space-y-1">
-            <span className="px-3 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider block">
+          <div key={section.title} className="space-y-1.5">
+            <span className="px-3 text-xs font-bold text-slate-500 uppercase tracking-wider block">
               {section.title}
             </span>
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isActive = (() => {
@@ -211,21 +211,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileSidebarOpen(false)}
-                    className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all ${
+                    className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all ${
                       isActive
                         ? 'bg-[#0f172a] text-white font-bold shadow-sm'
                         : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-semibold'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-3">
                       <Icon
-                        className={`w-4 h-4 transition-colors ${
+                        className={`w-4.5 h-4.5 transition-colors ${
                           isActive
                             ? 'text-white stroke-[2.3]'
-                            : 'text-slate-400 group-hover:text-slate-700'
+                            : 'text-slate-500 group-hover:text-slate-900'
                         }`}
                       />
-                      <span>{item.label}</span>
+                      <span className="tracking-tight">{item.label}</span>
                     </div>
 
                     {item.badge && (
@@ -331,7 +331,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen bg-white text-slate-900 flex">
       {/* DESKTOP FIXED LEFT SIDEBAR */}
-      <aside className="hidden lg:flex w-64 h-screen sticky top-0 flex-col shrink-0 border-r border-slate-200 z-40 bg-white">
+      <aside className="hidden lg:flex w-72 h-screen sticky top-0 flex-col shrink-0 border-r border-slate-200 z-40 bg-white">
         {sidebarContent}
       </aside>
 
