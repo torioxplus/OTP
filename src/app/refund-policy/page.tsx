@@ -48,40 +48,40 @@ export default function RefundPolicyPage() {
         </div>
 
         {/* Highlights Banner */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          <div className="p-5 rounded-2xl bg-white border border-emerald-200 shadow-xs flex items-start gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-emerald-200 shadow-xs flex items-start gap-3.5">
             <div className="p-2.5 rounded-xl bg-emerald-100 text-emerald-700 shrink-0">
               <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm">100% Instant Hold Release</h3>
-              <p className="text-xs text-slate-600 mt-1 font-medium">
+              <h3 className="font-bold text-slate-900 text-sm sm:text-base">100% Instant Hold Release</h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed font-medium">
                 If no SMS arrives within the countdown period, funds return to your wallet
                 automatically with ₹0 cancellation fee.
               </p>
             </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white border border-blue-200 shadow-xs flex items-start gap-3">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-blue-200 shadow-xs flex items-start gap-3.5">
             <div className="p-2.5 rounded-xl bg-blue-100 text-blue-700 shrink-0">
               <RefreshCw className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm">5–7 Day Bank Refund</h3>
-              <p className="text-xs text-slate-600 mt-1 font-medium">
+              <h3 className="font-bold text-slate-900 text-sm sm:text-base">5–7 Day Bank Refund</h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed font-medium">
                 Eligible online gateway top-ups are refunded straight back to your original bank / UPI
                 / card account.
               </p>
             </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white border border-purple-200 shadow-xs flex items-start gap-3">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-purple-200 shadow-xs flex items-start gap-3.5">
             <div className="p-2.5 rounded-xl bg-purple-100 text-purple-700 shrink-0">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm">Automated Reconciliation</h3>
-              <p className="text-xs text-slate-600 mt-1 font-medium">
+              <h3 className="font-bold text-slate-900 text-sm sm:text-base">Automated Reconciliation</h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed font-medium">
                 Bank deductions that experience network timeouts are auto-reconciled within 24 hours.
               </p>
             </div>

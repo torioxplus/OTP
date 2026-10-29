@@ -51,40 +51,42 @@ export default function TermsPage() {
         <div className="space-y-8 text-sm text-slate-700 leading-relaxed font-medium">
           {/* Section 1 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-mono font-bold shrink-0">
                 1
               </span>
-              Acceptance of Terms
+              <span>Acceptance of Terms</span>
             </h2>
-            <p className="text-slate-600">
-              Welcome to <strong>SIM10</strong> (operating the website{' '}
-              <span className="text-emerald-700 font-bold">sim10.in</span> and associated virtual phone
-              verification services, hereinafter referred to as &ldquo;the Platform&rdquo;, &ldquo;we&rdquo;,
-              &ldquo;us&rdquo;, or &ldquo;our&rdquo;).
-            </p>
-            <p className="text-slate-600 mt-2">
-              By registering an account, topping up your wallet, accessing, or using our services,
-              you acknowledge that you have read, understood, and agreed to be legally bound by these
-              Terms and Conditions and our Privacy Policy. If you do not agree with any part of these
-              terms, you must immediately discontinue use of the platform.
-            </p>
+            <div className="space-y-3.5 text-slate-700 leading-relaxed">
+              <p>
+                Welcome to <strong className="text-slate-900 font-bold">SIM10</strong> (operating the website{' '}
+                <span className="text-emerald-700 font-bold font-mono">sim10.in</span> and associated virtual phone
+                verification services, hereinafter referred to as &ldquo;the Platform&rdquo;, &ldquo;we&rdquo;,
+                &ldquo;us&rdquo;, or &ldquo;our&rdquo;).
+              </p>
+              <p>
+                By registering an account, topping up your wallet, accessing, or using our services,
+                you acknowledge that you have read, understood, and agreed to be legally bound by these
+                Terms and Conditions and our Privacy Policy. If you do not agree with any part of these
+                terms, you must immediately discontinue use of the platform.
+              </p>
+            </div>
           </section>
 
           {/* Section 2 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-mono font-bold shrink-0">
                 2
               </span>
-              Description of Services
+              <span>Description of Services</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-700 leading-relaxed mb-4">
               SIM10 provides automated cloud virtual telephone numbers and SMS verification
               routing services designed for software testing, quality assurance (QA), digital app
               demonstrations, and user privacy protection.
             </p>
-            <ul className="list-disc pl-6 mt-4 space-y-3 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
+            <ul className="list-disc pl-6 space-y-3.5 text-sm text-slate-600 leading-relaxed marker:text-slate-400">
               <li>
                 Virtual numbers are provided on a temporary, single-use activation basis.
               </li>
@@ -100,27 +102,27 @@ export default function TermsPage() {
 
           {/* Section 3 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-mono font-bold shrink-0">
                 3
               </span>
-              User Registration & Account Responsibilities
+              <span>User Registration & Account Responsibilities</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-700 leading-relaxed mb-4">
               To utilize the services, you must register for an account with a valid email address
               and maintain the confidentiality of your credentials.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-xs">
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <h4 className="font-bold text-slate-900 mb-1">Eligibility</h4>
-                <p className="text-slate-600">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs sm:text-sm">
+                <h4 className="font-bold text-slate-900 text-sm">Eligibility</h4>
+                <p className="text-slate-600 leading-relaxed">
                   You must be at least 18 years of age or possess legal capacity in your jurisdiction
                   to enter into binding contracts.
                 </p>
               </div>
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <h4 className="font-bold text-slate-900 mb-1">Account Security</h4>
-                <p className="text-slate-600">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs sm:text-sm">
+                <h4 className="font-bold text-slate-900 text-sm">Account Security</h4>
+                <p className="text-slate-600 leading-relaxed">
                   You are solely responsible for all activities and transactions executed under your
                   account credentials.
                 </p>
@@ -130,39 +132,39 @@ export default function TermsPage() {
 
           {/* Section 4 */}
           <section className="bg-white border border-rose-200 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-rose-100 text-rose-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-rose-100 text-rose-700 text-xs font-mono font-bold shrink-0">
                 4
               </span>
-              Strict Prohibited Uses & Anti-Fraud Policy
+              <span>Strict Prohibited Uses & Anti-Fraud Policy</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-700 leading-relaxed mb-4">
               Our platform operates strictly for legitimate testing and privacy protection. You
               expressly agree NOT to use SIM10 services for:
             </p>
-            <div className="space-y-2 mt-3 text-xs text-slate-600">
-              <div className="flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+            <div className="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-rose-50/50 border border-rose-100">
+                <AlertTriangle className="w-4.5 h-4.5 text-rose-600 shrink-0 mt-0.5" />
                 <span>
                   Any financial fraud, banking identity theft, unauthorized credit card operations,
                   or bypassing KYC/AML checks.
                 </span>
               </div>
-              <div className="flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-rose-50/50 border border-rose-100">
+                <AlertTriangle className="w-4.5 h-4.5 text-rose-600 shrink-0 mt-0.5" />
                 <span>
                   Illegal spamming, harassment, phishing, cyberstalking, or transmitting malicious code.
                 </span>
               </div>
-              <div className="flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-rose-50/50 border border-rose-100">
+                <AlertTriangle className="w-4.5 h-4.5 text-rose-600 shrink-0 mt-0.5" />
                 <span>
                   Any activity that violates the Information Technology Act, 2000, Indian Penal Code,
                   or applicable telecom regulations.
                 </span>
               </div>
             </div>
-            <div className="mt-4 p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 font-semibold">
+            <div className="mt-5 p-4 sm:p-5 bg-rose-50 border border-rose-200 rounded-2xl text-xs sm:text-sm text-rose-900 leading-relaxed font-semibold">
               <strong>Zero-Tolerance Enforcement:</strong> Any account detected participating in
               prohibited or fraudulent behavior will be terminated immediately, wallet balance
               forfeited, and appropriate details reported to competent law enforcement agencies.
@@ -171,27 +173,27 @@ export default function TermsPage() {
 
           {/* Section 5 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-mono font-bold shrink-0">
                 5
               </span>
-              Pricing, Wallet & Razorpay Payment Terms
+              <span>Pricing, Wallet & Razorpay Payment Terms</span>
             </h2>
-            <div className="space-y-3 text-slate-600">
+            <div className="space-y-4 text-slate-700 text-sm leading-relaxed">
               <p>
-                <strong>Currency:</strong> All prices, wallet top-ups, and service charges are
+                <strong className="text-slate-900 font-bold">Currency:</strong> All prices, wallet top-ups, and service charges are
                 denominated in Indian National Rupees (INR / ₹) including applicable taxes.
               </p>
               <p>
-                <strong>Pre-funded Wallet Model:</strong> Services are deducted directly from your
+                <strong className="text-slate-900 font-bold">Pre-funded Wallet Model:</strong> Services are deducted directly from your
                 pre-funded wallet balance. When you request a number, the service cost is held in
                 escrow. If no SMS arrives within the 5 to 15-minute validity window, the hold is
                 automatically released, and 100% of the funds return to your available balance.
               </p>
               <p>
-                <strong>Payment Gateway Processing:</strong> All online payments (UPI, Credit Cards,
+                <strong className="text-slate-900 font-bold">Payment Gateway Processing:</strong> All online payments (UPI, Credit Cards,
                 Debit Cards, Net Banking) are securely processed through our authorized payment
-                gateway partner <strong>Razorpay Software Private Limited</strong>. SIM10 does
+                gateway partner <strong className="text-slate-900 font-bold">Razorpay Software Private Limited</strong>. SIM10 does
                 not store or have access to your sensitive payment credentials (such as card numbers,
                 CVVs, or UPI PINs). All financial processing complies with RBI guidelines and PCI-DSS
                 Level 1 standards.
@@ -201,13 +203,13 @@ export default function TermsPage() {
 
           {/* Section 6 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-mono font-bold shrink-0">
                 6
               </span>
-              Refunds and Cancellations
+              <span>Refunds and Cancellations</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-700 leading-relaxed">
               Our comprehensive Refund and Cancellation Policy is fully integrated into these terms.
               Please review our dedicated{' '}
               <Link href="/refund-policy" className="text-emerald-700 underline font-bold">
@@ -219,13 +221,13 @@ export default function TermsPage() {
 
           {/* Section 7 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-mono font-bold shrink-0">
                 7
               </span>
-              Governing Law and Dispute Resolution
+              <span>Governing Law and Dispute Resolution</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-700 leading-relaxed">
               These Terms and Conditions shall be governed by and construed in accordance with the
               laws of the Republic of India. In the event of any claim, controversy, or dispute
               arising out of or related to these terms or our services, the courts located in Gujarat,
@@ -235,26 +237,26 @@ export default function TermsPage() {
 
           {/* Section 8 */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2.5 mb-3">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-mono font-bold">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-mono font-bold shrink-0">
                 8
               </span>
-              Contact Information
+              <span>Contact Information</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-700 leading-relaxed mb-4">
               For any legal notices, questions, or clarifications regarding these Terms and
               Conditions, please contact us:
             </p>
-            <div className="mt-3 text-xs text-slate-700 space-y-1.5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div className="text-xs sm:text-sm text-slate-700 space-y-2 bg-slate-50 p-5 rounded-2xl border border-slate-200 leading-relaxed">
               <p>
-                <strong className="text-slate-900">Business Entity:</strong> SIM10 Platform
+                <strong className="text-slate-900 font-bold">Business Entity:</strong> SIM10 Platform
               </p>
               <p>
-                <strong className="text-slate-900">Official Website:</strong>{' '}
+                <strong className="text-slate-900 font-bold">Official Website:</strong>{' '}
                 <span className="font-mono text-emerald-700 font-bold">https://sim10.in</span>
               </p>
               <p>
-                <strong className="text-slate-900">Official Support Email:</strong>{' '}
+                <strong className="text-slate-900 font-bold">Official Support Email:</strong>{' '}
                 <a
                   href="mailto:support@sim10.in"
                   className="text-emerald-700 underline font-mono font-bold"
@@ -263,7 +265,7 @@ export default function TermsPage() {
                 </a>
               </p>
               <p>
-                <strong className="text-slate-900">Support Operating Hours:</strong> Monday – Saturday,
+                <strong className="text-slate-900 font-bold">Support Operating Hours:</strong> Monday – Saturday,
                 9:00 AM – 7:00 PM IST
               </p>
             </div>

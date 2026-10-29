@@ -58,17 +58,17 @@ export default function AboutPage() {
         {/* Mission & Story */}
         <div className="space-y-8 text-sm text-slate-700 leading-relaxed font-medium">
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+              <Sparkles className="w-5 h-5 text-blue-600 shrink-0" />
               <span>Our Mission</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-600 leading-relaxed">
               Operating under the verified brand <strong>SIM10</strong>, our platform was
               engineered to solve a critical bottleneck faced by software developers, QA teams, and
               businesses: the need for reliable, rapid, and friction-free mobile number verification
               without risking personal privacy or purchasing expensive physical SIM cards.
             </p>
-            <p className="text-slate-600 mt-3">
+            <p className="text-slate-600 mt-4 leading-relaxed">
               We operate an intelligent aggregation network interfacing with premier tier-1 telecom
               aggregators globally. This ensures maximum delivery rates, millisecond-level routing,
               and 100% automated financial security for every user.
@@ -78,33 +78,33 @@ export default function AboutPage() {
           {/* Core Pillars */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
                 <Zap className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-slate-900 text-base">Sub-5s Delivery</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Our dynamic carrier routing continuously assesses line latency, ensuring inbound SMS
                 codes are delivered to your screen in an average of 4.8 seconds.
               </p>
             </div>
 
             <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-slate-900 text-base">Escrow Hold & Release</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Zero financial risk. If a telecom carrier fails to route an SMS within the active
                 countdown window, 100% of the held funds are instantly refunded to your wallet.
               </p>
             </div>
 
             <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
                 <Globe className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-slate-900 text-base">Global Coverage</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Access temporary numbers across multiple jurisdictions including India, the United
                 States, the United Kingdom, Indonesia, Brazil, and more for 200+ digital platforms.
               </p>
@@ -113,24 +113,24 @@ export default function AboutPage() {
 
           {/* Payment & Security Standards */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+              <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
               <span>Payments, Safety & Compliance</span>
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-600 leading-relaxed mb-5">
               Security and transparency form the bedrock of our platform:
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-xs">
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <h4 className="font-bold text-slate-900 mb-1">Razorpay Verified Integration</h4>
-                <p className="text-slate-600">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 className="font-bold text-slate-900 text-sm">Razorpay Verified Integration</h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
                   All customer payments are encrypted and processed through Razorpay with 3D Secure
                   multi-factor authentication and RBI compliance.
                 </p>
               </div>
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <h4 className="font-bold text-slate-900 mb-1">Data Privacy by Design</h4>
-                <p className="text-slate-600">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 className="font-bold text-slate-900 text-sm">Data Privacy by Design</h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
                   We collect minimal personal data, do not store financial credentials, and comply
                   with the Digital Personal Data Protection Act (DPDP), 2023.
                 </p>
@@ -140,8 +140,8 @@ export default function AboutPage() {
 
           {/* Corporate Details */}
           <section className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-            <h2 className="text-lg font-bold text-slate-900 mb-3">Corporate Details</h2>
-            <div className="text-xs text-slate-700 space-y-1.5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4">Corporate Details</h2>
+            <div className="text-sm text-slate-700 space-y-2.5 bg-slate-50 p-5 rounded-2xl border border-slate-200 leading-relaxed">
               <p>
                 <strong className="text-slate-900">Operating Brand:</strong> SIM10 Platform
               </p>
