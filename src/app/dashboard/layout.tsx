@@ -441,8 +441,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         )}
 
-        {/* Child Pages Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full">
+        {/* Child Pages Content - Full Width */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full">
           {children}
         </main>
 

@@ -370,10 +370,10 @@ export default function BuyNumberPage() {
         </div>
       )}
 
-      {/* NUMBER PURCHASE CONFIGURATOR (Section 15) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* NUMBER PURCHASE CONFIGURATOR (Section 15) - Full Width Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 xl:grid-cols-12 2xl:grid-cols-12 gap-6 xl:gap-8 w-full">
         {/* Left Column: Filter & Service Grid */}
-        <div className="lg:col-span-8 space-y-6">
+        <div className="lg:col-span-8 xl:col-span-8 2xl:col-span-9 space-y-5">
           {/* Controls Bar: Country & Search */}
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
             {/* Country Selector */}
@@ -433,51 +433,62 @@ export default function BuyNumberPage() {
             ))}
           </div>
 
-          {/* Service Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+          {/* Service Cards Grid - Sleek Compact Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-2.5 sm:gap-3">
             {filteredServices.map((service) => {
               const isSelected = selectedServiceId === service.id;
               return (
                 <div
                   key={service.id}
                   onClick={() => setSelectedServiceId(service.id)}
-                  className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
+                  className={`group relative p-3 sm:p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex items-center justify-between gap-3 ${
                     isSelected
-                      ? 'bg-slate-50 border-[#0f172a] shadow-md ring-1 ring-[#0f172a]'
+                      ? 'bg-slate-50/90 border-2 border-[#0f172a] shadow-xs ring-1 ring-[#0f172a]'
                       : 'bg-white border-slate-200 hover:border-slate-400 hover:shadow-xs'
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
-                        <ServiceIcon name={service.iconName} className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <h4 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">
-                          {service.name}
-                        </h4>
-                        <span className="text-xs text-slate-600 font-semibold flex items-center gap-1.5 mt-0.5">
-                          <span>~{service.avgSpeedSeconds}s</span>
-                          <span>•</span>
-                          <span className="text-[#0f172a] font-black">{service.successRate}%</span>
-                        </span>
-                      </div>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                        isSelected
+                          ? 'bg-slate-200/80 border border-slate-300'
+                          : 'bg-slate-100 border border-slate-200/80 group-hover:bg-slate-50'
+                      }`}
+                    >
+                      <ServiceIcon name={service.iconName} className="w-5 h-5" />
                     </div>
-
-                    <div className="text-right shrink-0">
-                      <span className="text-base sm:text-lg font-black font-mono text-[#0f172a] block">
-                        ₹{service.sellingPrice.toFixed(0)}
-                      </span>
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-xs sm:text-[13px] text-slate-900 truncate tracking-tight">
+                        {service.name}
+                      </h4>
+                      <div className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5 mt-0.5">
+                        <span>~{service.avgSpeedSeconds}s</span>
+                        <span>•</span>
+                        <span className="text-emerald-700 font-bold">{service.successRate}%</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-3.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600 font-semibold">
-                    <span className="capitalize">{service.category}</span>
-                    {isSelected && (
-                      <span className="font-bold text-white flex items-center gap-1 bg-[#0f172a] px-2 py-0.5 rounded-md text-[11px]">
-                        Selected <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                      </span>
-                    )}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span
+                      className={`font-mono font-black text-xs px-2.5 py-1 rounded-lg transition-colors ${
+                        isSelected
+                          ? 'bg-[#0f172a] text-white'
+                          : 'bg-slate-100 text-slate-900 group-hover:bg-slate-200'
+                      }`}
+                    >
+                      ₹{service.sellingPrice.toFixed(0)}
+                    </span>
+
+                    <div
+                      className={`w-4 h-4 rounded-full flex items-center justify-center transition-all ${
+                        isSelected
+                          ? 'bg-[#0f172a] text-white'
+                          : 'border border-slate-300 group-hover:border-slate-400'
+                      }`}
+                    >
+                      {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                    </div>
                   </div>
                 </div>
               );
@@ -492,7 +503,7 @@ export default function BuyNumberPage() {
         </div>
 
         {/* Right Column: Order Summary & Checkout Box */}
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-4 xl:col-span-4 2xl:col-span-3">
           <div className="sticky top-24 p-6 rounded-2xl bg-white border-2 border-slate-200 shadow-md space-y-6">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <Zap className="w-4 h-4 text-[#0f172a]" />
