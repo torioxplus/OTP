@@ -279,7 +279,7 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [wallet, transactions, orders, services, providers, isLoaded]);
 
-  // Synchronize with backend API on mount
+  // Synchronize with backend API on mount and on auth change
   useEffect(() => {
     if (!isLoaded) return;
     let isMounted = true;
@@ -304,16 +304,16 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
         const token = getStoredToken();
         if (token) {
-          const meRes = await api.auth.getMe();
+          const meRes = await api.auth.getMe({ force: true });
           if (isMounted && meRes.success && meRes.data?.user) {
             setCurrentUser(meRes.data.user);
             setIsLoggedIn(true);
 
             const [walRes, txnRes, actRes, ordRes] = await Promise.all([
-              api.wallet.getBalance(),
-              api.wallet.getTransactions(),
-              api.otp.getActiveOrder(),
-              api.otp.getUserOrders(),
+              api.wallet.getBalance({ force: true }),
+              api.wallet.getTransactions(50, { force: true }),
+              api.otp.getActiveOrder({ force: true }),
+              api.otp.getUserOrders({ force: true }),
             ]);
 
             if (isMounted && walRes.success && walRes.data?.wallet) {
@@ -339,7 +339,7 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return () => {
       isMounted = false;
     };
-  }, [isLoaded]);
+  }, [isLoaded, isLoggedIn]);
 
   // Periodic polling sync while an OTP order is waiting for SMS
   useEffect(() => {
@@ -395,23 +395,42 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (res.success && res.data?.user) {
         setCurrentUser(res.data.user);
         setIsLoggedIn(true);
-        localStorage.setItem('otp_is_logged_in', 'true');
-        localStorage.setItem('otp_user_role', res.data.user.role || 'customer');
-        localStorage.setItem('otp_user_data', JSON.stringify(res.data.user));
+        writeCache('otp_is_logged_in', 'true');
+        writeCache('otp_user_role', res.data.user.role || 'customer');
+        writeCache('otp_user_data', JSON.stringify(res.data.user));
         playChime();
 
-        // Refresh live user data
+        // Refresh live user data immediately with fresh cache bypass
         try {
-          const [walRes, txnRes, actRes, ordRes] = await Promise.all([
-            api.wallet.getBalance(),
-            api.wallet.getTransactions(),
-            api.otp.getActiveOrder(),
-            api.otp.getUserOrders(),
+          const [walRes, txnRes, actRes, ordRes, srvRes, provRes] = await Promise.all([
+            api.wallet.getBalance({ force: true }),
+            api.wallet.getTransactions(50, { force: true }),
+            api.otp.getActiveOrder({ force: true }),
+            api.otp.getUserOrders({ force: true }),
+            api.services.getAll(undefined, undefined, { force: true }),
+            api.services.getProviders({ force: true }),
           ]);
-          if (walRes.success && walRes.data?.wallet) setWallet(walRes.data.wallet);
-          if (txnRes.success && txnRes.data?.transactions) setTransactions(txnRes.data.transactions);
+          if (walRes.success && walRes.data?.wallet) {
+            setWallet(walRes.data.wallet);
+            writeCache('otp_wallet', JSON.stringify(walRes.data.wallet));
+          }
+          if (txnRes.success && txnRes.data?.transactions) {
+            setTransactions(txnRes.data.transactions);
+            writeCache('otp_txns', JSON.stringify(txnRes.data.transactions));
+          }
           if (actRes.success) setActiveOrder(actRes.data?.activeOrder || null);
-          if (ordRes.success && ordRes.data?.orders) setOrders(ordRes.data.orders);
+          if (ordRes.success && ordRes.data?.orders) {
+            setOrders(ordRes.data.orders);
+            writeCache('otp_orders', JSON.stringify(ordRes.data.orders));
+          }
+          if (srvRes.success && srvRes.data?.services?.length) {
+            setServices(srvRes.data.services);
+            writeCache('otp_services', JSON.stringify(srvRes.data.services));
+          }
+          if (provRes.success && provRes.data?.providers?.length) {
+            setProviders(mergeWithInitialProviders(provRes.data.providers));
+            writeCache('otp_providers', JSON.stringify(provRes.data.providers));
+          }
         } catch (e) {
           console.warn('Post-login sync warning:', e);
         }
@@ -437,18 +456,21 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (res.success && res.data?.user) {
         setCurrentUser(res.data.user);
         setIsLoggedIn(true);
-        localStorage.setItem('otp_is_logged_in', 'true');
-        localStorage.setItem('otp_user_role', 'customer');
-        localStorage.setItem('otp_user_data', JSON.stringify(res.data.user));
-        setWallet({
+        writeCache('otp_is_logged_in', 'true');
+        writeCache('otp_user_role', 'customer');
+        writeCache('otp_user_data', JSON.stringify(res.data.user));
+        const initialWallet: Wallet = {
           id: `wal_${res.data.user.id}`,
           userId: res.data.user.id,
           availableBalance: 0.0,
           heldBalance: 0.0,
           currency: 'INR',
           updatedAt: new Date().toISOString(),
-        });
+        };
+        setWallet(initialWallet);
+        writeCache('otp_wallet', JSON.stringify(initialWallet));
         setTransactions([]);
+        writeCache('otp_txns', JSON.stringify([]));
         playChime();
         return { success: true };
       }
@@ -477,9 +499,9 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const adminUser = res.data.user;
         setCurrentUser(adminUser);
         setIsLoggedIn(true);
-        localStorage.setItem('otp_is_logged_in', 'true');
-        localStorage.setItem('otp_user_role', adminUser.role);
-        localStorage.setItem('otp_user_data', JSON.stringify(adminUser));
+        writeCache('otp_is_logged_in', 'true');
+        writeCache('otp_user_role', adminUser.role);
+        writeCache('otp_user_data', JSON.stringify(adminUser));
 
         const [walRes, usersRes] = await Promise.all([
           api.wallet.getBalance({ force: true }),
@@ -524,13 +546,13 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (role === 'admin' || role === 'superadmin') {
       setCurrentUser(INITIAL_ADMIN_USER);
       setIsLoggedIn(true);
-      localStorage.setItem('otp_user_role', 'admin');
-      localStorage.setItem('otp_is_logged_in', 'true');
+      writeCache('otp_user_role', 'admin');
+      writeCache('otp_is_logged_in', 'true');
     } else {
       setCurrentUser(INITIAL_USER);
       setIsLoggedIn(true);
-      localStorage.setItem('otp_user_role', 'customer');
-      localStorage.setItem('otp_is_logged_in', 'true');
+      writeCache('otp_user_role', 'customer');
+      writeCache('otp_is_logged_in', 'true');
     }
   };
 

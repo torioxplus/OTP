@@ -24,9 +24,9 @@ export default function RegisterPage() {
   // If already logged in, redirect to dashboard
   React.useEffect(() => {
     if (isLoaded && isLoggedIn) {
-      router.push('/dashboard/buy-number');
+      window.location.href = '/dashboard/buy-number';
     }
-  }, [isLoaded, isLoggedIn, router]);
+  }, [isLoaded, isLoggedIn]);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -63,7 +63,7 @@ export default function RegisterPage() {
       setIsLoading(false);
 
       if (result.success) {
-        router.push('/dashboard/buy-number');
+        window.location.href = '/dashboard/buy-number';
       } else {
         setErrorMessage(result.error || 'Failed to create account.');
       }

@@ -22,13 +22,10 @@ export default function LoginPage() {
   React.useEffect(() => {
     if (isLoaded && isLoggedIn) {
       const role = localStorage.getItem('otp_user_role');
-      if (role === 'admin' || role === 'superadmin') {
-        router.push('/admin');
-      } else {
-        router.push('/dashboard/buy-number');
-      }
+      const target = role === 'admin' || role === 'superadmin' ? '/admin' : '/dashboard/buy-number';
+      window.location.href = target;
     }
-  }, [isLoaded, isLoggedIn, router]);
+  }, [isLoaded, isLoggedIn]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -53,11 +50,8 @@ export default function LoginPage() {
 
       if (result.success) {
         const role = localStorage.getItem('otp_user_role');
-        if (role === 'admin' || role === 'superadmin') {
-          router.push('/admin');
-        } else {
-          router.push('/dashboard/buy-number');
-        }
+        const target = role === 'admin' || role === 'superadmin' ? '/admin' : '/dashboard/buy-number';
+        window.location.href = target;
       } else {
         setErrorMessage(result.error || 'Invalid email or password.');
       }

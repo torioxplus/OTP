@@ -56,7 +56,7 @@ export const AuthModal: React.FC = () => {
       setIsLoading(false);
       if (result.success) {
         closeAuthModal();
-        router.push('/dashboard/buy-number');
+        window.location.href = '/dashboard/buy-number';
       } else {
         setErrorMessage(result.error || 'Invalid email or password.');
       }
@@ -87,7 +87,7 @@ export const AuthModal: React.FC = () => {
       setIsLoading(false);
       if (result.success) {
         closeAuthModal();
-        router.push('/dashboard/buy-number');
+        window.location.href = '/dashboard/buy-number';
       } else {
         setErrorMessage(result.error || 'Failed to create account.');
       }
