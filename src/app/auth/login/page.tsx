@@ -16,7 +16,19 @@ import {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = usePlatform();
+  const { login, isLoggedIn, isLoaded } = usePlatform();
+
+  // If already logged in, redirect to dashboard
+  React.useEffect(() => {
+    if (isLoaded && isLoggedIn) {
+      const role = localStorage.getItem('otp_user_role');
+      if (role === 'admin' || role === 'superadmin') {
+        router.push('/admin');
+      } else {
+        router.push('/dashboard/buy-number');
+      }
+    }
+  }, [isLoaded, isLoggedIn, router]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

@@ -50,6 +50,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [isLoaded, isLoggedIn, router]);
 
+  // Prevent flash: Never render dashboard UI if user is not loaded or not logged in
+  if (!isLoaded || !isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-slate-200 border-t-[#0f172a] rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
   const isAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin';
 
   // Sidebar navigation sections

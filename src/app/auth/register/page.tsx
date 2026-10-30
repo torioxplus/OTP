@@ -19,7 +19,14 @@ import {
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { register } = usePlatform();
+  const { register, isLoggedIn, isLoaded } = usePlatform();
+
+  // If already logged in, redirect to dashboard
+  React.useEffect(() => {
+    if (isLoaded && isLoggedIn) {
+      router.push('/dashboard/buy-number');
+    }
+  }, [isLoaded, isLoggedIn, router]);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

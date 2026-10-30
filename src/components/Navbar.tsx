@@ -49,21 +49,19 @@ export const Navbar: React.FC = () => {
             {!isLoggedIn ? (
               /* When NOT Logged In: Show Login & Sign Up buttons (Larger text & prominent styling) */
               <div className="flex items-center gap-2 sm:gap-3">
-                <button
-                  type="button"
-                  onClick={() => openAuthModal('login')}
+                <Link
+                  href="/auth/login"
                   className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition cursor-pointer"
                 >
                   Sign In
-                </button>
+                </Link>
 
-                <button
-                  type="button"
-                  onClick={() => openAuthModal('signup')}
+                <Link
+                  href="/auth/register"
                   className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-sm font-bold text-white bg-[#0f172a] hover:bg-[#1e293b] shadow-sm transition cursor-pointer"
                 >
                   Get Started
-                </button>
+                </Link>
               </div>
             ) : (
               /* When Logged In: Show Wallet & User Dropdown */

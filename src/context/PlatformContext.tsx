@@ -509,9 +509,11 @@ export const PlatformProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     api.auth.logout();
     setIsLoggedIn(false);
     setCurrentUser(INITIAL_USER);
-    localStorage.removeItem('otp_is_logged_in');
-    localStorage.removeItem('otp_user_role');
-    localStorage.removeItem('otp_user_data');
+    clearCacheKey('otp_is_logged_in');
+    clearCacheKey('otp_user_role');
+    clearCacheKey('otp_user_data');
+    clearCacheKey('otp_wallet');
+    clearCacheKey('otp_auth_token');
     if (typeof window !== 'undefined') {
       window.location.href = '/auth/login';
     }

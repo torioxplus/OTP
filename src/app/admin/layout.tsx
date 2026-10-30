@@ -22,7 +22,6 @@ import {
   Menu,
   X,
   ChevronRight,
-  Radio,
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -41,7 +40,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isVerifying, setIsVerifying] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
-  // If NOT authenticated as admin, show the Superadmin Key Gate
+  // If NOT authenticated as admin, show the Superadmin Key Gate (Crisp Light Theme)
   if (!isAdminAuthenticated) {
     const handleKeySubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -61,35 +60,35 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     };
 
     return (
-      <div className="min-h-screen bg-[#070a12] text-zinc-100 flex flex-col justify-center items-center p-4 relative overflow-hidden">
-        <div className="w-full max-w-md bg-zinc-950 border border-purple-900/60 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-center items-center p-4 relative overflow-hidden">
+        <div className="w-full max-w-md bg-white border-2 border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
           <div className="text-center space-y-2">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-purple-600 flex items-center justify-center text-white shadow-xl shadow-purple-600/30">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-[#0f172a] flex items-center justify-center text-white shadow-md">
               <Shield className="w-7 h-7" />
             </div>
-            <h1 className="text-2xl font-extrabold text-white tracking-tight pt-2">
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight pt-2">
               Superadmin Portal Access
             </h1>
-            <p className="text-xs text-zinc-400 leading-relaxed max-w-sm mx-auto">
+            <p className="text-xs text-slate-600 leading-relaxed max-w-sm mx-auto font-medium">
               This area is strictly restricted to platform administrators. Enter your Master
               Superadmin Key to unlock administrative privileges.
             </p>
           </div>
 
           {keyError && (
-            <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-800/60 flex items-center gap-2 text-rose-300 text-xs">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 flex items-center gap-2 text-rose-800 text-xs font-semibold">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               <span>{keyError}</span>
             </div>
           )}
 
           <form onSubmit={handleKeySubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Superadmin Key
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <KeyRound className="w-4 h-4" />
                 </div>
                 <input
@@ -99,14 +98,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     setInputKey(e.target.value);
                     setKeyError(null);
                   }}
-                  className="w-full pl-10 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-purple-500"
+                  className="w-full pl-10 pr-10 py-3 bg-white border-2 border-slate-200 rounded-xl text-xs text-slate-900 font-mono font-medium focus:outline-none focus:border-[#0f172a]"
                   placeholder="Enter superadmin key..."
                   autoFocus
                 />
                 <button
                   type="button"
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 cursor-pointer"
                 >
                   {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -116,18 +115,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <button
               type="submit"
               disabled={isVerifying || !inputKey.trim()}
-              className="w-full py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-purple-600/30 cursor-pointer"
+              className="w-full py-3 px-4 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
             >
               <Shield className="w-4 h-4" />
               <span>{isVerifying ? 'Verifying Key...' : 'Authenticate & Unlock'}</span>
             </button>
           </form>
 
-          <div className="pt-2 text-center border-t border-zinc-900">
+          <div className="pt-2 text-center border-t border-slate-100">
             <button
               type="button"
               onClick={() => router.push('/')}
-              className="text-xs text-zinc-400 hover:text-white transition flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
+              className="text-xs font-semibold text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Return to Public Home</span>
@@ -185,23 +184,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   const adminSidebarContent = (
-    <div className="flex flex-col h-full bg-zinc-950 text-zinc-100 select-none">
+    <div className="flex flex-col h-full bg-white text-slate-800 select-none">
       {/* Brand */}
-      <div className="p-5 border-b border-purple-900/40 flex items-center justify-between">
-        <Link href="/admin" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-600/30">
-            <Shield className="w-5 h-5" />
+      <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+        <Link href="/admin" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-xl bg-[#0f172a] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+            <Shield className="w-5 h-5 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight text-white">
-                OTP<span className="text-purple-400">Admin</span>
+              <span className="font-extrabold text-base tracking-tight text-slate-900">
+                SIM10<span className="text-slate-600 font-semibold ml-0.5">Admin</span>
               </span>
-              <span className="px-1.5 py-0.2 text-[9px] font-bold uppercase rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              <span className="px-1.5 py-0.5 text-[9px] font-black uppercase rounded bg-slate-100 text-slate-800 border border-slate-300">
                 Master
               </span>
             </div>
-            <span className="text-[10px] text-zinc-400 -mt-0.5">Superadmin Console</span>
+            <span className="text-[11px] text-slate-500 font-medium block -mt-0.5">Superadmin Console</span>
           </div>
         </Link>
 
@@ -209,7 +208,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <button
           type="button"
           onClick={() => setIsMobileSidebarOpen(false)}
-          className="lg:hidden p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+          className="lg:hidden p-1.5 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
           title="Close Admin Menu"
         >
           <X className="w-5 h-5" />
@@ -217,13 +216,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Nav Menu */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5 no-scrollbar">
+      <div className="flex-1 overflow-y-auto px-3.5 py-3 space-y-5 no-scrollbar">
         {adminSections.map((section) => (
-          <div key={section.title} className="space-y-1">
-            <span className="px-3 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
+          <div key={section.title} className="space-y-1.5">
+            <span className="px-3 text-xs font-bold text-slate-500 uppercase tracking-wider block">
               {section.title}
             </span>
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isActive =
@@ -234,14 +233,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileSidebarOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition ${
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition font-semibold ${
                       isActive
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/20'
-                        : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+                        ? 'bg-[#0f172a] text-white font-bold shadow-sm'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-zinc-400'}`} />
-                    <span>{item.label}</span>
+                    <Icon className={`w-4.5 h-4.5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
+                    <span className="tracking-tight">{item.label}</span>
                   </Link>
                 );
               })}
@@ -251,14 +250,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Bottom Switcher */}
-      <div className="p-3 border-t border-purple-900/40 bg-zinc-950/80">
+      <div className="p-3.5 border-t border-slate-200 bg-white">
         <button
           type="button"
           onClick={() => {
             switchRole('customer');
             router.push('/dashboard/buy-number');
           }}
-          className="w-full py-2.5 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 text-xs font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
+          className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Exit Admin Mode</span>
@@ -268,9 +267,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   );
 
   return (
-    <div className="min-h-screen bg-[#070a12] text-zinc-100 flex">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex">
       {/* Desktop Fixed Left Sidebar */}
-      <aside className="hidden lg:flex w-64 h-screen sticky top-0 flex-col shrink-0 border-r border-purple-900/40 z-40 bg-zinc-950">
+      <aside className="hidden lg:flex w-72 h-screen sticky top-0 flex-col shrink-0 border-r border-slate-200 z-40 bg-white">
         {adminSidebarContent}
       </aside>
 
@@ -278,10 +277,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {isMobileSidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs"
             onClick={() => setIsMobileSidebarOpen(false)}
           />
-          <div className="relative w-72 max-w-[85vw] h-full z-10 shadow-2xl flex flex-col">
+          <div className="relative w-72 max-w-[85vw] h-full z-10 shadow-2xl flex flex-col bg-white">
             {adminSidebarContent}
           </div>
         </div>
@@ -290,20 +289,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main Right Container */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-30 h-16 bg-zinc-950/90 backdrop-blur-md border-b border-purple-900/40 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 shadow-2xs">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer"
+              className="lg:hidden p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-purple-400 font-semibold">Admin</span>
-              <ChevronRight className="w-3.5 h-3.5 text-zinc-500" />
-              <span className="font-bold text-white">{getCurrentAdminTitle()}</span>
+              <span className="text-slate-500 font-semibold">Admin</span>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              <span className="font-bold text-slate-900 text-sm">{getCurrentAdminTitle()}</span>
             </div>
           </div>
 
@@ -311,9 +310,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {lowBalanceProviders.length > 0 && (
               <Link
                 href="/admin/providers"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold animate-pulse"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold animate-pulse"
               >
-                <AlertTriangle className="w-3.5 h-3.5" />
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
                 <span className="hidden sm:inline">Low Balance:</span>
                 <span>{lowBalanceProviders.length} Providers</span>
               </Link>
@@ -325,7 +324,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 switchRole('customer');
                 router.push('/dashboard/buy-number');
               }}
-              className="px-3.5 py-1.5 rounded-xl bg-purple-900/30 hover:bg-purple-900/50 text-purple-300 border border-purple-700/50 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Customer View</span>

@@ -27,7 +27,7 @@ export const Logo: React.FC<LogoProps> = ({
   };
 
   const content = (
-    <div className={`flex items-center gap-2.5 group cursor-pointer ${className}`}>
+    <div className={`flex items-center gap-2.5 pb-2 group cursor-pointer ${className}`}>
       {/* SIM Card Styled Icon */}
       <div
         className={`${iconSizes[size]} relative rounded-xl bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 flex items-center justify-center text-white shadow-md shadow-slate-950/25 group-hover:scale-105 transition-all duration-200 overflow-hidden shrink-0`}
